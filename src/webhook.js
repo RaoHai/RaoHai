@@ -4,10 +4,10 @@ const octokit = new Octokit({
 });
 
 exports.handler = async function(event, context, callback) {
-    console.log('>> webhook received', process.env.GITHUB_SECRET_FOR_NETLIFY);
-
-    callback(null, {
-      statusCode: 200,
-      body: await octokit.request('/users'),
-    });
+  const users = await octokit.request('/users');
+  console.log('>> users', users);
+  callback(null, {
+    statusCode: 200,
+    body: 'Hello World',
+  });
 }
