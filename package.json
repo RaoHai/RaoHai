@@ -4,7 +4,7 @@
   "description": "Prifle Repo",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "ncc build src/webhook.js -o .functions"
   },
   "repository": {
     "type": "git",
@@ -21,6 +21,7 @@
     "@octokit/rest": "^18.0.1"
   },
   "devDependencies": {
-    "@octokit/rest": "^18.0.1"
+    "@octokit/rest": "^18.0.1",
+    "@zeit/ncc": "^0.22.3"
   }
 }
