@@ -6,6 +6,8 @@ name: yuque
 # events but only for the master branch
 on:
   workflow_dispatch:
+    schedule:
+      - cron:  '* 24 * * *'
   push:
     branches: [ master ]
   pull_request:
@@ -33,13 +35,13 @@ jobs:
         # 是否只列出已发布的文章
         yuque-doc-public-only: true
         # 模板
-        yuque-template-file: README.yuque.template.md 
+        yuque-template-file: README.template.md
         # Which file to write
-        yuque-output-file: README.yuque.md
+        yuque-output-file: README.md
 
     - name: Result
       run: |-
-        cat README.yuque.md
+        cat README.md
 
     - name: Commit and push if changed
       run: |-
