@@ -31,8 +31,10 @@ jobs:
         yuque-namespace: luchen/buzhou
         # 是否只列出已发布的文章
         yuque-doc-public-only: true
+        # 模板
+        yuque-template-file: README.yuque.template.md 
         # Which file to write
-        yuque-output-file: README.skylark.md
+        yuque-output-file: README.yuque.md
 
     - name: Result
       run: |-
