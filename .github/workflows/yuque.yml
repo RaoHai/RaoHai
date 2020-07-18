@@ -38,7 +38,7 @@ jobs:
 
     - name: Result
       run: |-
-        cat README.skylark.md
+        cat README.yuque.md
 
     - name: Commit and push if changed
       run: |-
