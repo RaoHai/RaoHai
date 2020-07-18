@@ -1,5 +1,5 @@
 <h2>Hi, I'm Rao Hai! <img src="https://github.githubassets.com/images/mona-whisper.gif" height="24" /></h2>
-<img align='right' src="https://avatars2.githubusercontent.com/u/566097?s=460&u=f385d5f3c5b26fa41ea8f778743bbd2e47116394&v=4" width="230" />
+<img align='right' src="https://media.giphy.com/media/836HiJc7pgzy8iNXCn/giphy.gif" width="230" />
 <p><em>Front-end Engineer at <a href="https://www.alipay.com/">Alipay</a> . </em>
 
 <h4> Latest Blog Posts: </h4>
