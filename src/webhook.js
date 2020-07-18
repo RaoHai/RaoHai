@@ -4,8 +4,16 @@ const octokit = new Octokit({
 });
 
 exports.handler = async function(event, context, callback) {
-  const users = await octokit.request('/users');
-  console.log('>> users', users);
+
+  const result = await octokit.actions.createWorkflowDispatch({
+    owner: 'RaoHai',
+    repo: 'RaoHai',
+    workflow_id: 'yuque.yml',
+    ref: 'master',
+  });
+
+  console.log('--> handler received', context, result);
+
   callback(null, {
     statusCode: 200,
     body: 'Hello World',
