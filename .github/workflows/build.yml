@@ -1,0 +1,44 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Build ReadME
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  push:
+  workflow_dispatch:
+    schedule:
+      - cron:  '32 * * * *'
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - uses: actions/checkout@v2
+
+    - name: DatoCMS to Markdown
+      uses: RaoHai/datocms2md@1.0.0
+      with:
+        # Token of your datoCms site.enter your project administrative area (ie. http://your-project.admin.datocms.com) and go to the  Settings > API Tokens section.
+        datocms-token: ${{secrets.DATO_CMS_TOKEN}}
+        # Template for generate output
+        datocms-template-file: README.template.md
+        # Which file to write
+        datocms-output-file: README.md
+    - name: Result
+      run: |-
+        cat README.md
+    - name: Commit and push if changed
+      run: |-
+        git add .
+        git diff
+        git config --global user.email "github-action-bot@example.com"
+        git config --global user.name "GitHub Action Bot"
+        git commit -m "Updated README" -a || echo "No changes to commit"
+        git push
+
