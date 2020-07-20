@@ -1,12 +1,12 @@
 # How I Built A Self-Updating README by Webhooks and Netlify Functions.
 
-![image.png](https://cdn.nlark.com/yuque/0/2020/png/84204/1595206669063-20aafb8a-1867-4b27-a77d-72bd422072d1.png#align=left&display=inline&height=538&margin=%5Bobject%20Object%5D&name=image.png&originHeight=1076&originWidth=2538&size=941890&status=done&style=none&width=1269)<br />
+![image.png](https://cdn.nlark.com/yuque/0/2020/png/84204/1595206669063-20aafb8a-1867-4b27-a77d-72bd422072d1.png)<br />
 
 <a name="oyCZK"></a>
 ## Generate README by Github Action
 Github profile READMEs allowing users to create own content of REAMDE markdown file rendered at profile page.<br />
-<br />Visit github.com/RaoHai and you'll see a list of posts. I doing this with a Github Action in[ yuque.yml](https://github.com/RaoHai/RaoHai/blob/master/.github/workflows/yuque.yml), the workflow configured to run on every push event and [workflow_dispatch](https://docs.github.com/en/actions/reference/events-that-trigger-workflows#workflow_dispatch) event.<br />
-<br />The action runs [actions/yuque-to-readme](https://github.com/marketplace/actions/yuque-to-readme), which take your yuque api token and retrive your posts from yuque. Then read given template file, then generate README.md by handlebars:<br />
+<br />Visit github.com/RaoHai and you'll see a list of posts. I do this with a Github Action in[ yuque.yml](https://github.com/RaoHai/RaoHai/blob/master/.github/workflows/yuque.yml), the workflow configured to run on every push event and [workflow_dispatch](https://docs.github.com/en/actions/reference/events-that-trigger-workflows#workflow_dispatch) event.<br />
+<br />The action runs [actions/yuque-to-readme](https://github.com/marketplace/actions/yuque-to-readme), which take your yuque API token and retrieve your posts from yuque. Then read given template file, then generate README.md by handlebars:<br />
 
 ```markdown
 <h2>Hi, I'm Rao Hai! <img src="https://github.githubassets.com/images/mona-whisper.gif" height="24" /></h2>
@@ -44,10 +44,10 @@ on:
     - cron:  '*/15 * * * *'
 
 ```
-But I am doing this in graceful way: yuque.com allows call a Webhook while a document area created or updated, so I hosted a [Netlify Functions](https://docs.netlify.com/functions/overview/) that exposed a Webhook API. <br />
-<br />It dispatches a `workflow_dispatch` event by Github Api when have been called. The `yuque.yml` workflow then scheduled.<br />
+But I am skillfully doing this: yuque.com allows call a Webhook while a document area created or updated, so I hosted a [Netlify Functions](https://docs.netlify.com/functions/overview/) that exposed a Webhook API. <br />
+<br />It dispatches a `workflow_dispatch` event by Github Api when it has been called. The `yuque.yml` workflow then scheduled.<br />
 <br />![english.png](https://cdn.nlark.com/yuque/0/2020/png/84204/1595207774716-b6b05682-8516-463b-9d7d-927faf0b8774.png#align=left&display=inline&height=896&margin=%5Bobject%20Object%5D&name=english.png&originHeight=896&originWidth=1434&size=197088&status=done&style=none&width=1434)<br />
 
 <a name="3y94z"></a>
 ## Conclusion
-This post provides a solution for scheduling workflow using Webhooks in buiding Github profile READMEs. Considering this workflow runs very fast, so maybe trigger it at a scheduled time is more simple way, depends on you. :D.
+This post provides a solution for scheduling workflow using Webhooks in building Github profile READMEs. Considering this workflow runs very fast, so maybe trigger it at a scheduled time is a more simple way, depends on you. :D.
