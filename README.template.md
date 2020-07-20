@@ -18,6 +18,6 @@
 <a href="https://github.com/RaoHai/RaoHai/workflows">
 <img align="right" alt="Build README" src="https://github.com/RaoHai/RaoHai/workflows/yuque/badge.svg?branch=master" />
 </a>
-<a  href="https://www.yuque.com/luchen/buzhou/qqi7hq">
-How this works
+<a  href="https://github.com/RaoHai/RaoHai/blob/master/How-I-Built-A-Self-Updating-README-by-Webhooks-and-Netlify-Functions.md">
+How I Built A Self-Updating README by Webhooks and Netlify Functions.
 </a>
