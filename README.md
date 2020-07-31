@@ -4,9 +4,8 @@
 
 <h4> Latest Blog Posts: </h4>
 
-  - [How I Built A Self-Updating README by Webhooks and Netlify Functions.](https://yuque.com/luchen/buzhou/hga8n6) - 07-20 00:52
   - [Webpack 模块构建时长分析及可视化](https://yuque.com/luchen/buzhou/erq3gp) - 07-18 18:11
-  - [使用语雀生成 Github Profile README](https://yuque.com/luchen/buzhou/qqi7hq) - 07-18 12:39
+  - [使用语雀自动同步生成 Github Profile README](https://yuque.com/luchen/buzhou/qqi7hq) - 07-18 12:39
   - [时间、时区与时区信息数据库](https://yuque.com/luchen/buzhou/kr0rc3) - 03-25 02:04
 
 <p align="right"><a href="https://www.yuque.com/luchen/buzhou">➡️ More blog posts</a></p>
