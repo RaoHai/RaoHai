@@ -15,7 +15,7 @@
 </p>
 
 -----
-<a href="https://github.com/RaoHai/RaoHai/workflows">
+<a href="https://github.com/RaoHai/RaoHai/actions">
 <img align="right" alt="Build README" src="https://github.com/RaoHai/RaoHai/workflows/yuque/badge.svg?branch=master" />
 </a>
 <a  href="https://github.com/RaoHai/RaoHai/blob/master/How-I-Built-A-Self-Updating-README-by-Webhooks-and-Netlify-Functions.md">
