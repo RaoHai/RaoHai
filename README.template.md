@@ -5,7 +5,7 @@
 <h4> Latest Blog Posts: </h4>
 
 {{#each record}}
-  - [{{title}}](https://yuque.com/{{@root.namespace}}/{{slug}}) - {{short created_at "YYYY-MM-dd HH:mm"}}
+  - [{{title}}](https://yuque.com/{{@root.namespace}}/{{slug}}) - {{short created_at "yyyy-MM-dd HH:mm"}}
 {{/each}}
 
 <p align="right"><a href="https://www.yuque.com/luchen/buzhou">➡️ More blog posts</a></p>
