@@ -38,6 +38,8 @@ jobs:
         yuque-template-file: README.template.md
         # Which file to write
         yuque-output-file: README.md
+        
+        yuque-doc-limit: 6
 
     - name: Result
       run: |-
