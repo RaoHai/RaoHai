@@ -4,12 +4,12 @@
 
 <h4> Latest Blog Posts: </h4>
 
+  - [How to Deploy an OpenAI Streaming API on AWS Lambda Using Python.](https://yuque.com/luchen/buzhou/glh83gd3fsd6rw78) - 2024-04-09 10:56
   - [2023 Google I/O Connect Shanghai 参会总结：云，AI 与 Web](https://yuque.com/luchen/buzhou/lbtio5z9p8gssn26) - 2023-09-11 02:57
   - [[个人向] Google State of DevOps Reports 2022 解读](https://yuque.com/luchen/buzhou/za1pom) - 2022-10-18 09:23
   - [[Presentation] 蚂蚁前端灰度监控与变更防御](https://yuque.com/luchen/buzhou/kf6tm3) - 2021-07-12 10:08
   - [在没有 SourceMap 的情况下反解源码](https://yuque.com/luchen/buzhou/dpbum7) - 2021-07-12 10:06
   - [为自己的团队定制 CSS 框架](https://yuque.com/luchen/buzhou/bs9tzt) - 2021-03-02 07:10
-  - [How I Built A Self-Updating README by Webhooks and Netlify Functions.](https://yuque.com/luchen/buzhou/hga8n6) - 2020-07-20 00:52
 
 <p align="right"><a href="https://www.yuque.com/luchen/buzhou">➡️ More blog posts</a></p>
 <p align="right">
