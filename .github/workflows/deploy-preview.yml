@@ -1,0 +1,18 @@
+# .github/workflows/deploy-preview.yml
+name: Deploy Backend to Preview ECS
+
+on:
+  workflow_run:
+    workflows: ["PR Tests"]
+    types:
+      - completed
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        
+      - name: Deploy to Preview Environment
+        run: echo "Deploying to preview environment..."

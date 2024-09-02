@@ -1,0 +1,17 @@
+# .github/workflows/pr-tests.yml
+name: PR Tests
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        
+      - name: Run tests
+        run: echo "Running tests..."
