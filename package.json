@@ -18,10 +18,10 @@
   },
   "homepage": "https://github.com/RaoHai/RaoHai#readme",
   "dependencies": {
-    "@octokit/rest": "^18.0.1"
+    "@octokit/rest": "^21.1.0"
   },
   "devDependencies": {
-    "@octokit/rest": "^18.0.1",
+    "@octokit/rest": "^21.1.0",
     "@zeit/ncc": "^0.22.3"
   }
 }
