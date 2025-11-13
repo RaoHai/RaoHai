@@ -24,6 +24,8 @@
 
 ## 🎤 Conference Presentations
 
+- **[W3C TPAC 2025](https://www.w3.org/events/meetings/32b7c7e5-b0cf-42c9-94c4-9e384526f4a3/#join)** / [Web AI Agent Rendering Containers - Dynamic Architectures and the Need for Standardization](https://github.com/w3c/chinese-ig/blob/main/TPAC2025/slides/Web%20AI%20Agent%20Rendering%20Containers%20%20.pdf)
+  
 - **[第十三届中国用户体验大会](https://www.uxacn.com/)**  / AI Agent for Accessibility
 
 - **[W3C WebEvolve 2025](https://www.w3.org/2024/01/webevolve-series-events/annual-2025/high-perf.en.html)**  / [Exploration of Rendering Containers and Dynamic Architectures for Web-based AI agents](https://www.w3.org/2024/01/webevolve-series-events/annual-2025/slides/hai-rao.pdf)
