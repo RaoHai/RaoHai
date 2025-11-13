@@ -24,11 +24,12 @@
 
 ## 🎤 Conference Presentations
 
-- **[W3C TPAC 2025](https://www.w3.org/events/meetings/32b7c7e5-b0cf-42c9-94c4-9e384526f4a3/#join)** / [Web AI Agent Rendering Containers - Dynamic Architectures and the Need for Standardization](https://github.com/w3c/chinese-ig/blob/main/TPAC2025/slides/Web%20AI%20Agent%20Rendering%20Containers%20%20.pdf)
-  
-- **[第十三届中国用户体验大会](https://www.uxacn.com/)**  / AI Agent for Accessibility
+ - **W3C — TPAC 2025 & WebEvolve 2025** / "Web AI Agent Rendering Containers — Dynamic architectures and the need for standardization"
+  （围绕 Web 上 AI Agent 的渲染容器设计与标准化；TPAC 会议信息与幻灯片、WebEvolve 幻灯片）
+  - TPAC: https://www.w3.org/events/meetings/32b7c7e5-b0cf-42c9-94c4-9e384526f4a3/#join
+  - 幻灯片: https://github.com/w3c/chinese-ig/blob/main/TPAC2025/slides/Web%20AI%20Agent%20Rendering%20Containers%20%20.pdf
 
-- **[W3C WebEvolve 2025](https://www.w3.org/2024/01/webevolve-series-events/annual-2025/high-perf.en.html)**  / [Exploration of Rendering Containers and Dynamic Architectures for Web-based AI agents](https://www.w3.org/2024/01/webevolve-series-events/annual-2025/slides/hai-rao.pdf)
+ - **[第十三届中国用户体验大会](https://www.uxacn.com/)**  / AI Agent for Accessibility
 
 - **[GMTC 2021](https://gmtc.infoq.cn/2021/beijing/presentation/3526)** /  [蚂蚁前端灰度监控与变更防御](https://gmtc.infoq.cn/2021/beijing/presentation/3526)
 
