@@ -24,13 +24,10 @@
 
 ## 🎤 Conference Presentations
 
- - **W3C — TPAC 2025 & WebEvolve 2025** / "Web AI Agent Rendering Containers — Dynamic architectures and the need for standardization"
-   
-   两场会议围绕同一主题展开：在 Web 上为 AI Agent 设计可渲染容器（rendering containers）的架构、性能与标准化需求。包含 TPAC 的会议记录与幻灯片，以及 WebEvolve 的延伸演讲材料：
-   - TPAC 2025 会议页: https://www.w3.org/events/meetings/32b7c7e5-b0cf-42c9-94c4-9e384526f4a3/#join
-   - TPAC 幻灯片: https://github.com/w3c/chinese-ig/blob/main/TPAC2025/slides/Web%20AI%20Agent%20Rendering%20Containers%20%20.pdf
-   - WebEvolve 演讲: https://www.w3.org/2024/01/webevolve-series-events/annual-2025/high-perf.en.html
-   - WebEvolve 幻灯片: https://www.w3.org/2024/01/webevolve-series-events/annual-2025/slides/hai-rao.pdf
+ - **W3C — TPAC 2025 & WebEvolve 2025** / Web AI Agent Rendering Containers — Dynamic architectures and the need for standardization
+   - [TPAC 2025](https://www.w3.org/events/meetings/32b7c7e5-b0cf-42c9-94c4-9e384526f4a3/#join): [Slides / English]( https://github.com/w3c/chinese-ig/blob/main/TPAC2025/slides/Web%20AI%20Agent%20Rendering%20Containers%20%20.pdf)
+   - [WebEvolve 2025](https://www.w3.org/2024/01/webevolve-series-events/annual-2025/high-perf.en.html): [Slides / Chinese](https://www.w3.org/2024/01/webevolve-series-events/annual-2025/slides/hai-rao.pdf)
+
 
  - **[第十三届中国用户体验大会](https://www.uxacn.com/)**  / AI Agent for Accessibility
 
