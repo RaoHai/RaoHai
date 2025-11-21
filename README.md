@@ -25,7 +25,7 @@
 ## 🎤 Conference Presentations
 
  - **W3C — TPAC 2025 & WebEvolve 2025** / Web AI Agent Rendering Containers — Dynamic architectures and the need for standardization
-   - [TPAC 2025](https://www.w3.org/events/meetings/32b7c7e5-b0cf-42c9-94c4-9e384526f4a3/#join): [Slides / English]( https://github.com/w3c/chinese-ig/blob/main/TPAC2025/slides/Web%20AI%20Agent%20Rendering%20Containers%20%20.pdf)
+   - [TPAC 2025](https://www.w3.org/events/meetings/32b7c7e5-b0cf-42c9-94c4-9e384526f4a3/#join): [Slides / English](https://www.w3.org/2025/11/13-chinese-web-minutes.html#b888)
    - [WebEvolve 2025](https://www.w3.org/2024/01/webevolve-series-events/annual-2025/high-perf.en.html): [Slides / Chinese](https://www.w3.org/2024/01/webevolve-series-events/annual-2025/slides/hai-rao.pdf)
 
 
