@@ -4,7 +4,7 @@
     <img src="https://github.githubassets.com/images/mona-whisper.gif" height="30" />
   </h1>
 
-  <img width="1024" height="728" alt="image" src="https://github.com/user-attachments/assets/306251e5-e456-41b2-8ce7-34f8a5bd466c" />
+<img width="1024" height="728" alt="image" src="https://github.com/user-attachments/assets/35ee030e-dce5-441f-8981-7072def1ea72" />
 
   <p>
     <em>🚀 Full Stack / AI Engineer at <a href="https://afx-team.github.io/">Alipay Experience Technology Department</a></em>
