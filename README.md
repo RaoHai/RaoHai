@@ -19,6 +19,18 @@
 
 ---
 
+## 📚 Publications
+
+- **[Reasoning for Mobile User Experience with Multimodal LLMs: Task, Benchmark, and Approach](https://openaccess.thecvf.com/content/CVPR2026F/html/Mao_Reasoning_for_Mobile_User_Experience_with_Multimodal_LLMs_Task_Benchmark_CVPRF_2026_paper.html)**  
+  Ruichao Mao, Zhou Fang, Teng Guo, Hao Yang, Yaping Li, Shaohua Peng, Maji Huang, Xiaoyu Lin, Shuoyang Liu, Xuepeng Li, Yuyu Zhang, **Hai Rao**  
+  *CVPR 2026 Findings* · [PDF](https://openaccess.thecvf.com/content/CVPR2026F/papers/Mao_Reasoning_for_Mobile_User_Experience_with_Multimodal_LLMs_Task_Benchmark_CVPRF_2026_paper.pdf)
+
+- **[UI-UG: A Unified MLLM for UI Understanding and Generation](https://arxiv.org/abs/2509.24361)**  
+  Hao Yang, Weijie Qiu, Ru Zhang, Zhou Fang, Ruichao Mao, Xiaoyu Lin, Maji Huang, Zhaosong Huang, Teng Guo, Shuoyang Liu, **Hai Rao**  
+  *arXiv 2025* · [PDF](https://arxiv.org/pdf/2509.24361) · [Code & Model](https://github.com/afx-team/UI-UG)
+
+---
+
 ## 🎤 Conference Presentations
 
  - **W3C — TPAC 2025 & WebEvolve 2025** / Web AI Agent Rendering Containers — Dynamic architectures and the need for standardization
