@@ -31,6 +31,12 @@
 
 ---
 
+## 🌐 Community
+
+- Co-chair, [W3C Generative UI Community Group](https://www.w3.org/community/gen-ui/)
+
+---
+
 ## 🎤 Conference Presentations
 
  - **W3C — TPAC 2025 & WebEvolve 2025** / Web AI Agent Rendering Containers — Dynamic architectures and the need for standardization
