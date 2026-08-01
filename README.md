@@ -52,12 +52,12 @@
 
 ## 📝 Latest Blog Posts
 
-- 🌐 [2023 Google I/O Connect Shanghai 参会总结：云，AI 与 Web](https://yuque.com/luchen/buzhou/lbtio5z9p8gssn26) - September 11, 2023
+- [Tokenmaxxing：当 AI 烧钱变成一场没有人敢停的军备竞赛](https://viberules.dev/posts/tokenmaxxing-steam-engine.html) - 2026-08-01
 
-- 📊 [[个人向] Google State of DevOps Reports 2022 解读](https://yuque.com/luchen/buzhou/za1pom) - October 18, 2022
+- [强模型负责规划、弱模型负责执行，是伪命题吗？](https://viberules.dev/posts/strong-planner-weak-executor.html) - 2026-07-28
 
-- 🔍 [在没有 SourceMap 的情况下反解源码](https://yuque.com/luchen/buzhou/dpbum7) - July 12, 2021
+- [Mid-system vs `<system-reminder>`](https://viberules.dev/posts/mid-system-vs-system-reminder.html) - 2026-07-23
 
-- 🎨 [为自己的团队定制 CSS 框架](https://yuque.com/luchen/buzhou/bs9tzt) - March 2, 2021
+- [2025 Google I/O Connect Shanghai 总结：教练，我想做 Agent](https://viberules.dev/posts/google-io-connect-shanghai-2025.html) - 2025-08-08
 
-- 🔗 [How I Built A Self-Updating README by Webhooks and Netlify Functions.](https://yuque.com/luchen/buzhou/hga8n6) - July 20, 2020
+- [WAIC 2025 摸鱼式逛展纪](https://viberules.dev/posts/waic-2025.html) - 2025-07-31
