@@ -23,7 +23,7 @@
 
 - **[Reasoning for Mobile User Experience with Multimodal LLMs: Task, Benchmark, and Approach](https://openaccess.thecvf.com/content/CVPR2026F/html/Mao_Reasoning_for_Mobile_User_Experience_with_Multimodal_LLMs_Task_Benchmark_CVPRF_2026_paper.html)**  
   Ruichao Mao et al., **Hai Rao**  
-  *CVPR 2026 Findings* · [PDF](https://openaccess.thecvf.com/content/CVPR2026F/papers/Mao_Reasoning_for_Mobile_User_Experience_with_Multimodal_LLMs_Task_Benchmark_CVPRF_2026_paper.pdf)
+  *CVPR 2026 Findings* · [PDF](https://openaccess.thecvf.com/content/CVPR2026F/papers/Mao_Reasoning_for_Mobile_User_Experience_with_Multimodal_LLMs_Task_Benchmark_CVPRF_2026_paper.pdf) · [Code & Model](https://github.com/afx-team/UI-UX)
 
 - **[UI-UG: A Unified MLLM for UI Understanding and Generation](https://arxiv.org/abs/2509.24361)**  
   Hao Yang et al., **Hai Rao**  
