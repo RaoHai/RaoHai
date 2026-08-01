@@ -5,6 +5,8 @@
   </h1>
   <p>
     <em>🚀 Full Stack / AI Engineer at <a href="https://afx-team.github.io/">Alipay Experience Technology Department</a></em>
+    <br />
+    <em>Co-chair, <a href="https://www.w3.org/community/gen-ui/">W3C Generative UI Community Group</a></em>
   </p>
 
   <p>
@@ -28,12 +30,6 @@
 - **[UI-UG: A Unified MLLM for UI Understanding and Generation](https://arxiv.org/abs/2509.24361)**  
   Hao Yang et al., **Hai Rao**  
   *Preprint* · [PDF](https://arxiv.org/pdf/2509.24361) · [Code & Model](https://github.com/afx-team/UI-UG)
-
----
-
-## 🌐 Community
-
-- Co-chair, [W3C Generative UI Community Group](https://www.w3.org/community/gen-ui/)
 
 ---
 
