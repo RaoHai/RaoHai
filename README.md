@@ -48,6 +48,8 @@
 
 ## 📝 Latest Blog Posts
 
+- [DeepSeek-V4-Flash Agent Trace：从模型对比到 Harness 调优](https://viberules.dev/posts/deepseek-v4-flash-harness.html) - 2026-08-04
+
 - [强模型负责规划、弱模型负责执行，是伪命题吗？](https://viberules.dev/posts/strong-planner-weak-executor.html) - 2026-07-28
 
 - [Mid-system vs `<system-reminder>`](https://viberules.dev/posts/mid-system-vs-system-reminder.html) - 2026-07-23
@@ -55,5 +57,3 @@
 - [Tokenmaxxing：当 AI 烧钱变成一场没有人敢停的军备竞赛](https://viberules.dev/posts/tokenmaxxing-steam-engine.html) - 2026-05-14
 
 - [2025 Google I/O Connect Shanghai 总结：教练，我想做 Agent](https://viberules.dev/posts/google-io-connect-shanghai-2025.html) - 2025-08-08
-
-- [WAIC 2025 摸鱼式逛展纪](https://viberules.dev/posts/waic-2025.html) - 2025-07-31
