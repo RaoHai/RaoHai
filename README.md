@@ -48,7 +48,7 @@
 
 ## 📝 Latest Blog Posts
 
-- [dsh：从自反到元 Harness](https://viberules.dev/posts/meta-harness-agent-self-composition.html) - 2026-08-15
+- [DeepSeek Harness：从自反到元 Harness](https://viberules.dev/posts/meta-harness-agent-self-composition.html) - 2026-08-15
 
 - [DeepSeek-V4-Flash Agent Trace：从模型对比到 Harness 调优](https://viberules.dev/posts/deepseek-v4-flash-harness.html) - 2026-08-04
 
