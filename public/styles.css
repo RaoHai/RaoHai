@@ -1,3 +1,69 @@
+@font-face {
+  font-family: "HuiWen";
+  src: url("assets/fonts/huiwen.woff2") format("woff2");
+  font-weight: 400 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "New Computer Modern";
+  src: url("assets/fonts/NewCM10-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "New Computer Modern";
+  src: url("assets/fonts/NewCM10-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "New Computer Modern";
+  src: url("assets/fonts/NewCM10-Italic.woff2") format("woff2");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "New Computer Modern";
+  src: url("assets/fonts/NewCM10-BoldItalic.woff2") format("woff2");
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "New Computer Modern Sans";
+  src: url("assets/fonts/NewCMSans10-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "New Computer Modern Sans";
+  src: url("assets/fonts/NewCMSans10-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "New Computer Modern Mono";
+  src: url("assets/fonts/NewCMMono10-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "New Computer Modern Mono";
+  src: url("assets/fonts/NewCMMono10-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-display: swap;
+}
+
 :root {
   color-scheme: light;
   --paper: #ffffff;
@@ -8,8 +74,9 @@
   --accent: #167c80;
   --accent-2: #6b7280;
   --max: 820px;
-  --article: 760px;
-  --sans: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue",
+  --article: 720px;
+  --serif: "New Computer Modern", "HuiWen", "Songti SC", "STSong", "SimSun", serif;
+  --sans: "New Computer Modern Sans", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue",
     Helvetica, Arial, sans-serif, "Segoe UI";
 }
 
@@ -26,9 +93,11 @@ body {
   min-height: 100vh;
   background: var(--paper);
   color: var(--ink);
-  font-family: var(--sans);
+  font-family: var(--serif);
   font-size: 15.5px;
-  line-height: 1.76;
+  line-height: 1.95;
+  letter-spacing: 0;
+  font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -52,6 +121,7 @@ a:hover {
 }
 
 .site-nav {
+  font-family: var(--sans);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -99,7 +169,7 @@ h2,
 h3,
 h4 {
   margin: 0;
-  font-family: var(--sans);
+  font-family: var(--serif);
   font-weight: 600;
   line-height: 1.25;
 }
@@ -330,6 +400,7 @@ h1 {
 }
 
 .site-footer {
+  font-family: var(--sans);
   display: flex;
   justify-content: space-between;
   gap: 20px;
@@ -356,6 +427,7 @@ h1 {
 }
 
 .article-toc {
+  font-family: var(--sans);
   position: fixed;
   top: 92px;
   left: max(18px, calc((100vw - var(--article)) / 2 - 244px));
@@ -432,8 +504,8 @@ h1 {
 
 .article-header h1 {
   max-width: 760px;
-  font-size: clamp(30px, 5vw, 42px);
-  line-height: 1.32;
+  font-size: 30px;
+  line-height: 1.55;
 }
 
 .article-header time {
@@ -445,9 +517,9 @@ h1 {
 
 .article-content {
   color: #262626;
-  font-family: var(--sans);
+  font-family: var(--serif);
   font-size: 16px;
-  line-height: 1.74;
+  line-height: 2.05;
   overflow-wrap: break-word;
 }
 
@@ -457,7 +529,7 @@ h1 {
 .article-content h4 {
   scroll-margin-top: 28px;
   margin: 2.1em 0 0.75em;
-  font-family: var(--sans);
+  font-family: var(--serif);
   font-weight: 600;
   line-height: 1.45;
 }
@@ -479,7 +551,7 @@ h1 {
 }
 
 .article-content p {
-  margin: 0 0 0.92em;
+  margin: 1em 0;
 }
 
 .article-content a {
@@ -561,7 +633,7 @@ h1 {
 }
 
 .article-content code {
-  font-family: Consolas, "SFMono-Regular", Menlo, monospace;
+  font-family: "New Computer Modern Mono", Consolas, "SFMono-Regular", Menlo, monospace;
 }
 
 .article-content :not(pre) > code {
@@ -580,6 +652,7 @@ h1 {
 }
 
 .table-wrap table {
+  font-family: var(--sans);
   width: max-content;
   min-width: 100%;
   border-collapse: collapse;
@@ -702,7 +775,7 @@ h1 {
 
   .article-shell {
     width: min(100% - 34px, var(--article));
-    padding-top: 24px;
+    padding-top: 64px;
   }
 
   .article-toc {
@@ -718,6 +791,10 @@ h1 {
 
   .article-content {
     font-size: 16px;
-    line-height: 1.78;
+    line-height: 2;
+  }
+
+  .article-header h1 {
+    font-size: 26px;
   }
 }

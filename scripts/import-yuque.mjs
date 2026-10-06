@@ -430,13 +430,7 @@ function layout({ title, description, date, body }) {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="${escapeHtml(description || title)}" />
     <title>${escapeHtml(title)} · 生活倒影</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;700&family=Inter:wght@400;500;600&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="../styles.css" />
+    <link rel="stylesheet" href="../styles.css?v=20261006-mincho" />
   </head>
   <body>
     <main class="article-shell">
@@ -536,13 +530,7 @@ function indexPage(items) {
       content="生活倒影。关于工程、AI、Web、工作方法与日常观察的文字记录。"
     />
     <title>生活倒影</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;700&family=Inter:wght@400;500;600&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./styles.css?v=20261006-mincho" />
   </head>
   <body>
     <main id="top" class="page-shell">
@@ -582,13 +570,7 @@ function aboutPage() {
       content="Rao Hai 的个人介绍、论文、社区参与、公开分享与最新文章。"
     />
     <title>About · 生活倒影</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;700&family=Inter:wght@400;500;600&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./styles.css?v=20261006-mincho" />
   </head>
   <body>
     <main class="page-shell about-page">

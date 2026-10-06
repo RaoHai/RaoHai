@@ -20,9 +20,11 @@ To regenerate pages after editing articles or metadata:
 
 ```sh
 npm run import:yuque
+npm run fonts
 ```
 
 The import command also fetches public Yuque content and images.
+Font subsetting requires Python with `fonttools` and `brotli`; see `fonts/README.md`.
 
 ## Deployment
 

@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "npx serve public",
     "import:yuque": "node scripts/import-yuque.mjs",
+    "fonts": "node scripts/subset-fonts.mjs",
     "deploy": "npx wrangler pages deploy public --project-name cloud-edgetunnel-raohai --commit-dirty=true"
   },
   "devDependencies": {
