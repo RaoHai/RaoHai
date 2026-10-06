@@ -1,0 +1,136 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 760" width="1280" height="760" data-generator="fireworks-tech-graph" data-schema-version="1" data-text-metrics="heuristic-v1" data-style-id="4" data-visual-theme="Notion Clean" data-diagram-type="architecture" data-motion-scene="" data-semantic-profile="generic" data-semantic-valid="true" data-quality-profile="showcase" data-max-bends-per-edge="2" data-max-total-bends="8" data-max-route-stretch="1.35" data-max-bridged-crossings="0" data-min-node-gap="40.0" data-min-container-gutter="20.0" data-min-label-clearance="4.0" data-min-segment-length="16.0">
+  <defs>
+    <marker id="arrowA" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#3b82f6"/>
+    </marker>
+    <marker id="arrowB" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#3b82f6"/>
+    </marker>
+    <marker id="arrowC" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#3b82f6"/>
+    </marker>
+    <marker id="arrowE" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#3b82f6"/>
+    </marker>
+    <marker id="arrowF" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#9ca3af"/>
+    </marker>
+    <marker id="arrowG" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#9ca3af"/>
+    </marker>
+    <marker id="arrowH" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#d1d5db"/>
+    </marker>
+    <style>
+    text { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, 'PingFang SC', 'Microsoft YaHei', 'Microsoft JhengHei', 'SimHei', sans-serif; }
+    .title { font-size: 18px; font-weight: 700; fill: #111827; }
+    .subtitle { font-size: 13px; font-weight: 500; fill: #9ca3af; }
+    .section { font-size: 13px; font-weight: 700; fill: #9ca3af; letter-spacing: 1.4px; }
+    .section-sub { font-size: 12px; font-weight: 500; fill: #d1d5db; }
+    .node-title { font-weight: 700; fill: #111827; }
+    .node-sub { font-size: 12px; font-weight: 500; fill: #374151; }
+    .node-type { font-size: 11px; font-weight: 700; fill: #9ca3af; letter-spacing: 0.08em; }
+    .arrow-label { font-size: 12px; font-weight: 600; fill: #6b7280; }
+    .legend { font-size: 12px; font-weight: 500; fill: #6b7280; }
+    .footnote { font-size: 12px; font-weight: 500; fill: #9ca3af; }
+    .metric-label { font-size: 8.5px; font-weight: 700; fill: #9ca3af; text-transform: uppercase; }
+    .metric-value { font-size: 9.5px; font-weight: 700; fill: #111827; }
+    </style>
+  </defs>
+  <rect data-graph-role="background" width="1280.0" height="760.0" fill="#ffffff"/>
+  <text x="48.0" y="48" text-anchor="start" class="title">DeepSeek Harness Runtime Composition</text>
+  <text x="48.0" y="72" text-anchor="start" class="subtitle">profile / bundle / patch are resolved into a Cordis context and logged execution</text>
+  <line x1="48" y1="100" x2="1232.0" y2="100" stroke="#e5e7eb" stroke-width="1"/>
+  <g id="config-lane" data-graph-role="container" data-container-id="config-lane" data-semantic-role="boundary" data-graph-bounds="48,118,1232,302">
+  <rect data-graph-role="container" x="48.0" y="118.0" width="1184.0" height="184.0" rx="4.0" fill="none" stroke="#e5e7eb" stroke-width="1.4"/>
+  <text x="66.0" y="142.0" class="section">CONFIGURATION SURFACE</text>
+    <rect id="config-lane-header" data-graph-role="reserved" data-reserved-kind="container-header" x="56" y="124" width="178.72" height="30" fill="none" stroke="none"/>
+  </g>
+  <g id="runtime-lane" data-graph-role="container" data-container-id="runtime-lane" data-semantic-role="boundary" data-graph-bounds="48,370,1232,648">
+  <rect data-graph-role="container" x="48.0" y="370.0" width="1184.0" height="278.0" rx="4.0" fill="none" stroke="#e5e7eb" stroke-width="1.4"/>
+  <text x="66.0" y="394.0" class="section">RUNTIME COMPOSITION</text>
+    <rect id="runtime-lane-header" data-graph-role="reserved" data-reserved-kind="container-header" x="56" y="376" width="166.5" height="30" fill="none" stroke="none"/>
+  </g>
+  <path id="c1" data-graph-role="edge" data-edge-id="c1" data-source="profile" data-target="bundle" data-edge-kind="flow" data-topic-id="" data-flow="control" data-motion-role="" data-motion-stage="" data-motion-order="" data-protocol="" data-via="" data-critical-path-id="" data-critical-hop="" data-critical-hops="" data-critical="false" data-bends="0" data-route-stretch="1.0" data-bridges="" d="M 254,215 L 306,215" fill="none" stroke="#3b82f6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrowA)"/>
+  <path id="c2" data-graph-role="edge" data-edge-id="c2" data-source="bundle" data-target="patch" data-edge-kind="flow" data-topic-id="" data-flow="control" data-motion-role="" data-motion-stage="" data-motion-order="" data-protocol="" data-via="" data-critical-path-id="" data-critical-hop="" data-critical-hops="" data-critical="false" data-bends="0" data-route-stretch="1.0" data-bridges="" d="M 476,215 L 528,215" fill="none" stroke="#3b82f6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrowA)"/>
+  <path id="c3" data-graph-role="edge" data-edge-id="c3" data-source="patch" data-target="dump" data-edge-kind="flow" data-topic-id="" data-flow="read" data-motion-role="" data-motion-stage="" data-motion-order="" data-protocol="" data-via="" data-critical-path-id="" data-critical-hop="" data-critical-hops="" data-critical="false" data-bends="0" data-route-stretch="1.0" data-bridges="" d="M 698,215 L 946,215" fill="none" stroke="#3b82f6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrowA)"/>
+  <path id="r1" data-graph-role="edge" data-edge-id="r1" data-source="context" data-target="plugins" data-edge-kind="flow" data-topic-id="" data-flow="control" data-motion-role="" data-motion-stage="" data-motion-order="" data-protocol="" data-via="" data-critical-path-id="" data-critical-hop="" data-critical-hops="" data-critical="false" data-bends="2" data-route-stretch="1.0" data-bridges="" d="M 282,498 L 302.4,498 L 302.4,468 L 338,468" fill="none" stroke="#3b82f6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrowA)"/>
+  <path id="r2" data-graph-role="edge" data-edge-id="r2" data-source="context" data-target="lifecycle" data-edge-kind="flow" data-topic-id="" data-flow="write" data-motion-role="" data-motion-stage="" data-motion-order="" data-protocol="" data-via="" data-critical-path-id="" data-critical-hop="" data-critical-hops="" data-critical="false" data-bends="2" data-route-stretch="1.0" data-bridges="" d="M 282,516 L 302.4,516 L 302.4,580 L 338,580" fill="none" stroke="#3b82f6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrowA)"/>
+  <path id="r3" data-graph-role="edge" data-edge-id="r3" data-source="plugins" data-target="seams" data-edge-kind="flow" data-topic-id="" data-flow="control" data-motion-role="" data-motion-stage="" data-motion-order="" data-protocol="" data-via="" data-critical-path-id="" data-critical-hop="" data-critical-hops="" data-critical="false" data-bends="0" data-route-stretch="1.0" data-bridges="" d="M 548,468 L 620,468" fill="none" stroke="#3b82f6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrowA)"/>
+  <path id="r4" data-graph-role="edge" data-edge-id="r4" data-source="lifecycle" data-target="session" data-edge-kind="flow" data-topic-id="" data-flow="write" data-motion-role="" data-motion-stage="" data-motion-order="" data-protocol="" data-via="" data-critical-path-id="" data-critical-hop="" data-critical-hops="" data-critical="false" data-bends="0" data-route-stretch="1.0" data-bridges="" d="M 548,580 L 620,580" fill="none" stroke="#3b82f6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrowA)"/>
+  <path id="r5" data-graph-role="edge" data-edge-id="r5" data-source="seams" data-target="agent" data-edge-kind="flow" data-topic-id="" data-flow="read" data-motion-role="" data-motion-stage="" data-motion-order="" data-protocol="" data-via="" data-critical-path-id="" data-critical-hop="" data-critical-hops="" data-critical="false" data-bends="2" data-route-stretch="1.0" data-bridges="" d="M 830,468 L 850.4,468 L 850.4,499 L 918,499" fill="none" stroke="#3b82f6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrowA)"/>
+  <path id="r6" data-graph-role="edge" data-edge-id="r6" data-source="session" data-target="agent" data-edge-kind="flow" data-topic-id="" data-flow="read" data-motion-role="" data-motion-stage="" data-motion-order="" data-protocol="" data-via="" data-critical-path-id="" data-critical-hop="" data-critical-hops="" data-critical="false" data-bends="2" data-route-stretch="1.0" data-bridges="" d="M 830,580 L 854,580 L 854,517 L 918,517" fill="none" stroke="#3b82f6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrowA)"/>
+  <g id="node-profile" data-graph-role="node" data-node-id="profile" data-semantic-role="rect" data-motion-role="" data-motion-stage="" data-motion-order="" data-parent="" data-deployment-id="" data-topic-id="" data-span-id="" data-station-order="" data-status="" data-start-ms="" data-duration-ms="" data-parent-span="" data-graph-bounds="84,174,254,256">
+  <rect x="84.0" y="174.0" width="170.0" height="82.0" rx="4.0" fill="#ffffff" stroke="#e5e7eb" stroke-width="1.8"/>
+  <text x="169.0" y="192.0" text-anchor="middle" class="node-type">PROFILE</text>
+  <text x="169.0" y="221.0" text-anchor="middle" class="node-title" font-size="18.0">Base Profile</text>
+  <text x="169.0" y="243.0" text-anchor="middle" class="node-sub">default capability set</text>
+  </g>
+  <g id="node-bundle" data-graph-role="node" data-node-id="bundle" data-semantic-role="rect" data-motion-role="" data-motion-stage="" data-motion-order="" data-parent="" data-deployment-id="" data-topic-id="" data-span-id="" data-station-order="" data-status="" data-start-ms="" data-duration-ms="" data-parent-span="" data-graph-bounds="306,174,476,256">
+  <rect x="306.0" y="174.0" width="170.0" height="82.0" rx="4.0" fill="#ffffff" stroke="#dbeafe" stroke-width="1.8"/>
+  <text x="391.0" y="192.0" text-anchor="middle" class="node-type">BUNDLE</text>
+  <text x="391.0" y="221.0" text-anchor="middle" class="node-title" font-size="18.0">Task Bundle</text>
+  <text x="391.0" y="243.0" text-anchor="middle" class="node-sub">web / code / gui</text>
+  </g>
+  <g id="node-patch" data-graph-role="node" data-node-id="patch" data-semantic-role="rect" data-motion-role="" data-motion-stage="" data-motion-order="" data-parent="" data-deployment-id="" data-topic-id="" data-span-id="" data-station-order="" data-status="" data-start-ms="" data-duration-ms="" data-parent-span="" data-graph-bounds="528,174,698,256">
+  <rect x="528.0" y="174.0" width="170.0" height="82.0" rx="4.0" fill="#ffffff" stroke="#ddd6fe" stroke-width="1.8"/>
+  <text x="613.0" y="192.0" text-anchor="middle" class="node-type">PATCH</text>
+  <text x="613.0" y="221.0" text-anchor="middle" class="node-title" font-size="18.0">Runtime Patch</text>
+  <text x="613.0" y="243.0" text-anchor="middle" class="node-sub">scoped adjustment</text>
+  </g>
+  <g id="node-dump" data-graph-role="node" data-node-id="dump" data-semantic-role="rect" data-motion-role="" data-motion-stage="" data-motion-order="" data-parent="" data-deployment-id="" data-topic-id="" data-span-id="" data-station-order="" data-status="" data-start-ms="" data-duration-ms="" data-parent-span="" data-graph-bounds="946,174,1136,256">
+  <rect x="946.0" y="174.0" width="190.0" height="82.0" rx="4.0" fill="#ffffff" stroke="#fed7aa" stroke-width="1.8"/>
+  <text x="1041.0" y="192.0" text-anchor="middle" class="node-type">INSPECT</text>
+  <text x="1041.0" y="221.0" text-anchor="middle" class="node-title" font-size="18.0">dump-config</text>
+  <text x="1041.0" y="243.0" text-anchor="middle" class="node-sub">composition as data</text>
+  <rect x="964.0" y="236.0" width="98" height="16" rx="3" fill="#fff7ed" stroke="#fed7aa" stroke-width="1"/>
+  <text x="1013.0" y="247.5" text-anchor="middle" font-size="11" font-weight="500" fill="#c2410c">enumerable</text>
+  </g>
+  <g id="node-context" data-graph-role="node" data-node-id="context" data-semantic-role="hexagon" data-motion-role="" data-motion-stage="" data-motion-order="" data-parent="" data-deployment-id="" data-topic-id="" data-span-id="" data-station-order="" data-status="" data-start-ms="" data-duration-ms="" data-parent-span="" data-graph-bounds="92,452,282,562">
+  <path d="M 114.0 452.0 L 260.0 452.0 L 282.0 507.0 L 260.0 562.0 L 114.0 562.0 L 92.0 507.0 Z" fill="#ffffff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="187.0" y="470.0" text-anchor="middle" class="node-type">CORDIS</text>
+  <text x="187.0" y="513.0" text-anchor="middle" class="node-title" font-size="18.0">Context</text>
+  <text x="187.0" y="535.0" text-anchor="middle" class="node-sub">effect / coeffect runtime</text>
+  </g>
+  <g id="node-plugins" data-graph-role="node" data-node-id="plugins" data-semantic-role="rect" data-motion-role="" data-motion-stage="" data-motion-order="" data-parent="" data-deployment-id="" data-topic-id="" data-span-id="" data-station-order="" data-status="" data-start-ms="" data-duration-ms="" data-parent-span="" data-graph-bounds="338,428,548,508">
+  <rect x="338.0" y="428.0" width="210.0" height="80.0" rx="4.0" fill="#ffffff" stroke="#e5e7eb" stroke-width="1.8"/>
+  <text x="443.0" y="446.0" text-anchor="middle" class="node-type">PLUGIN TREE</text>
+  <text x="443.0" y="474.0" text-anchor="middle" class="node-title" font-size="16.85">Harness Components</text>
+  <text x="443.0" y="496.0" text-anchor="middle" class="node-sub">model / tools / loop / UI</text>
+  </g>
+  <g id="node-lifecycle" data-graph-role="node" data-node-id="lifecycle" data-semantic-role="rect" data-motion-role="" data-motion-stage="" data-motion-order="" data-parent="" data-deployment-id="" data-topic-id="" data-span-id="" data-station-order="" data-status="" data-start-ms="" data-duration-ms="" data-parent-span="" data-graph-bounds="338,548,548,612">
+  <rect x="338.0" y="548.0" width="210.0" height="64.0" rx="4.0" fill="#ffffff" stroke="#bbf7d0" stroke-width="1.8"/>
+  <text x="443.0" y="566.0" text-anchor="middle" class="node-type">LIFECYCLE</text>
+  <text x="443.0" y="586.0" text-anchor="middle" class="node-title" font-size="18.0">Mount / Unmount</text>
+  <text x="443.0" y="608.0" text-anchor="middle" class="node-sub">register + unwind</text>
+  </g>
+  <g id="node-seams" data-graph-role="node" data-node-id="seams" data-semantic-role="rect" data-motion-role="" data-motion-stage="" data-motion-order="" data-parent="" data-deployment-id="" data-topic-id="" data-span-id="" data-station-order="" data-status="" data-start-ms="" data-duration-ms="" data-parent-span="" data-graph-bounds="620,428,830,508">
+  <rect x="620.0" y="428.0" width="210.0" height="80.0" rx="4.0" fill="#ffffff" stroke="#dbeafe" stroke-width="1.8"/>
+  <text x="725.0" y="446.0" text-anchor="middle" class="node-type">SEAMS</text>
+  <text x="725.0" y="474.0" text-anchor="middle" class="node-title" font-size="16.75">Provider Interfaces</text>
+  <text x="725.0" y="496.0" text-anchor="middle" class="node-sub">service definition / consumer</text>
+  </g>
+  <g id="node-session" data-graph-role="node" data-node-id="session" data-semantic-role="rect" data-motion-role="" data-motion-stage="" data-motion-order="" data-parent="" data-deployment-id="" data-topic-id="" data-span-id="" data-station-order="" data-status="" data-start-ms="" data-duration-ms="" data-parent-span="" data-graph-bounds="620,548,830,612">
+  <rect x="620.0" y="548.0" width="210.0" height="64.0" rx="4.0" fill="#ffffff" stroke="#fed7aa" stroke-width="1.8"/>
+  <text x="725.0" y="566.0" text-anchor="middle" class="node-type">LOG</text>
+  <text x="725.0" y="586.0" text-anchor="middle" class="node-title" font-size="18.0">Session Log</text>
+  <text x="725.0" y="608.0" text-anchor="middle" class="node-sub">model-visible means logged</text>
+  </g>
+  <g id="node-agent" data-graph-role="node" data-node-id="agent" data-semantic-role="hexagon" data-motion-role="" data-motion-stage="" data-motion-order="" data-parent="" data-deployment-id="" data-topic-id="" data-span-id="" data-station-order="" data-status="" data-start-ms="" data-duration-ms="" data-parent-span="" data-graph-bounds="918,456,1122,560">
+  <path d="M 940.0 456.0 L 1100.0 456.0 L 1122.0 508.0 L 1100.0 560.0 L 940.0 560.0 L 918.0 508.0 Z" fill="#ffffff" stroke="#64748b" stroke-width="1.6"/>
+  <text x="1020.0" y="474.0" text-anchor="middle" class="node-type">AGENT</text>
+  <text x="1020.0" y="514.0" text-anchor="middle" class="node-title" font-size="18.0">Model Execution</text>
+  <text x="1020.0" y="536.0" text-anchor="middle" class="node-sub">acts through current composition</text>
+  </g>
+  <g id="r1-label" data-graph-role="label" data-owner="r1" data-graph-bounds="270.84,424,333.56,444">
+  <rect x="270.84" y="424.0" width="62.72" height="20" rx="6" fill="#ffffff" opacity="0.96"/>
+  <text x="302.2" y="438.0" text-anchor="middle" class="arrow-label">compose</text>
+  </g>
+  <g id="r2-label" data-graph-role="label" data-owner="r2" data-graph-bounds="305.4,524,361.16,544">
+  <rect x="305.4" y="524.0" width="55.76" height="20" rx="6" fill="#ffffff" opacity="0.96"/>
+  <text x="333.28" y="538.0" text-anchor="middle" class="arrow-label">effect</text>
+  </g>
+  <g id="footer" data-graph-role="reserved" data-graph-bounds="52,716,661,732">
+  <text x="52.0" y="728.0" class="footnote">Style 4 · fireworks-tech-graph · DeepSeek Harness makes runtime composition inspectable</text>
+  </g>
+</svg>

@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="前言现阶段，前端构建时间已经成为 Basement 平台和用户的共同困扰（之一）：在平台的数据看板上，每周构建最慢的应用通常都是 10 分钟级。而用户也在不断的通过不同渠道表达对构建速度的不满。在 Basement 4.0 新开放的功能 「构建报告」 中，已经透出了整个 pipeline 中各..." />
+    <title>Webpack 模块构建时长分析及可视化 · 生活倒影</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;700&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../styles.css" />
+  </head>
+  <body>
+    <main class="article-shell">
+      <a class="back-link" href="../index.html">← 首页</a>
+      <div class="article-layout">
+        
+        <article class="article-page">
+          <header class="article-header">
+            <h1>Webpack 模块构建时长分析及可视化</h1>
+            <time datetime="2020-07-19">2020-07-19</time>
+          </header>
+          <div class="article-content">
+            <h1 id="k4F4F">前言</h1><p>现阶段，前端构建时间已经成为 Basement 平台和用户的共同困扰（之一）：在平台的数据看板上，每周构建最慢的应用通常都是 10 分钟级。而<span>用户也在不断的通过不同渠道表达对构建速度的不满。</span></p><p><span><br /></span></p><p><span><span>在 Basement 4.0 新开放的功能 「构建报告」 中，已经透出了整个 pipeline 中各阶段的耗时甘特图，但遗憾的是，花费时间最长的前端构建部分，仍然近乎黑盒。</span></span></p><p><span><span><br /></span></span></p><p><span><figure><img src="../assets/images/erq3gp-01.png" alt="image.png" width="742" height="229" loading="lazy" /></figure></span></p><p>通常情况下，如果关心构建时间，我们可以使用 <a href="https://github.com/stephencookdev/speed-measure-webpack-plugin" target="_blank">Speed Measure Plugin</a> (SMP) 来收集构建过程中的时间消耗。主要包括总体耗时、各插件与各 loader 的耗时。SMP 插件可以让我们对 webpack 的构建消耗有一点了解，但它只透出了时长消耗的总览，而没有各模块的耗时细节。</p><p style="text-align: center;"><figure><img src="../assets/images/erq3gp-02.png" alt="image.png" width="444" height="344" loading="lazy" /></figure></p><p>为了获取更多 webpack构建的细节，包括哪个文件、模块在构建中消耗了最多的时间，冗长到不能忍的构建时长到底花费在了哪个（些）模块上，给构建部署优化以明确的指引。这也就是题图中的那句话：</p><blockquote><p>If you can't measure it, you can improve it.</p></blockquote><p>或者换成更简短的中文</p><blockquote><p>无度量，不优化。</p></blockquote><h1 id="cPkl4">开端：Compiler And Compilation Hooks</h1><p>Webpack 提供了 Compiler 和 Compilation 的 hooks。</p><p>其中，Compiler 会在通过 Node API 或 CLI 传递编译选项到 webpack 时创建新的 Compilation 实例。Compilation 则在编译阶段负责模块的加载（load）、封装（seal）、优化（optimize）、分块（chunk）等操作。<span>Compiler 和 </span><span>Compilation 都拓展了 </span><a href="https://github.com/webpack/tapable#tapable" target="_blank">Tapable</a> 类，可以使用 tap、tapAsync、tapPromise 等 API 为它们的一些生命周期挂上钩子。</p><p>那么只要在分别记录 compiler 的开始时间（ <code>compiler.hooks.compile</code>  ）与结束时间（ <code>compiler.hooks.done</code>  ），计算它们之间的时间差即可得出 webpack 的总体构建时长。</p><p>而对于 Compilation 而言，在开始构建一个模块之前，会触发 <code>compilation.hooks.buildModule</code>  ，在成功构建完成后，会触发  <code>compilation.hooks.successModule</code> 。记录下每次 <code>buildModule</code> 触发时对应的模块，再在 <code><span>successModule</span></code> 时标记为完成。就可以采集到每个模块构建的起止时间与耗时。</p><p>到这个阶段，我们可以拿到一份各模块及它的 loaders 的耗时，像这样</p><pre><code class="language-json">{
+  &quot;client/components/viewer.jsx&quot;: {
+		&quot;loaders&quot;: [
+			&quot;babel-loader&quot;
+		],
+		&quot;start&quot;: 1574149981841,
+		&quot;end&quot;: 1574149981863
+	},
+	&quot;node_modules/react/cjs/react.development.js&quot;: {
+		&quot;loaders&quot;: [
+			&quot;modules with no loaders&quot;
+		],
+		&quot;start&quot;: 1574149981842,
+		&quot;end&quot;: 1574149982032
+	},
+  &quot;node_modules/@babel/runtime/helpers/esm/iterableToArrayLimit.js&quot;: {
+		&quot;loaders&quot;: [
+			&quot;modules with no loaders&quot;
+		],
+		&quot;start&quot;: 1574149981873,
+		&quot;end&quot;: 1574149982043
+	},
+	&quot;node_modules/@babel/runtime/helpers/esm/arrayWithHoles.js&quot;: {
+		&quot;loaders&quot;: [
+			&quot;modules with no loaders&quot;
+		],
+		&quot;start&quot;: 1574149981873,
+		&quot;end&quot;: 1574149982044
+	},
+  ...
+}</code></pre><h1 id="HKbZx">继续：目录与 loaders 的聚合</h1><p>上一份数据中，所有的记录的粒度都是到文件。但对一个开发来说，他对自己的业务代码会关心到文件，但对项目的依赖往往只需要关心到依赖就可以了。所以我们需要区分处理：对于业务代码，仍然提供细到文件的构建时长数据，而对于依赖，只需要提供到依赖粒度的数据就可以了。</p><p>值得注意的是，Webpack 并不是串行处理各个模块的，也不是完全并行。在上面的模块详情数据中， <code>viewer.jsx</code> 最先开始构建，但未等构建完毕，就同时开始了  <code>react.development.js</code> 的处理。仍然未等构建完成， <code>@babel/runtime</code> 中的 <code>iterableToArrayLimit</code> 与 <code>arrayWithHoles</code> 两个文件已经同时开始了。</p><p>可以把上面的数据按照文件、start 和 end 画出甘特图，大概会是这样的情况：</p><p><figure><img src="../assets/images/erq3gp-03.png" alt="image.png" width="1276" height="388" loading="lazy" /></figure></p><p>所以要聚合统计某个依赖（即目录）下的耗时，需要先把属于该目录下的所有文件的起止时间取出来，做分段累加。才能得到准确的耗时情况。</p><p>同理，要准确统计在构建中每个 loader 的总体耗时，也需要把属于使用某个 loader 的所有文件的开始结束时间都取出来做分段累加。</p><p style="text-align: center;"><figure><img src="../assets/images/erq3gp-04.png" alt="image.png" width="627" height="320" loading="lazy" /></figure></p><p style="text-align: left;">到这个阶段，已经初步满足了需求：用户代码按文件给出构建时长，而依赖和 loader 分别按依赖名和 loaders 组聚合统计构建时长。</p><h1 id="kAz9Y">佳境：离群值检测</h1><p style="text-align: left;">为了给到用户明确的建议，我们对每一个模块的构建耗时进行了离群值 (outlier) 检测。这里我们用了 IQR 算法简单实现：当一个值超出两倍 IQR 时[1]，则会被标记成离群值。插件会把被标记成离群值的模块推送建议。</p><p style="text-align: center;"><figure><img src="../assets/images/erq3gp-05.png" alt="image.png" width="599" height="300" loading="lazy" /></figure></p><p id="c5f9" style="text-align: left;">这个简单的检测效果其实还不错。</p><p style="text-align: center;"><figure><img src="../assets/images/erq3gp-06.png" alt="image.png" width="564" height="243" loading="lazy" /></figure></p><h1 id="zenzd">可视：更清晰的指引</h1><p>回到需求本身。我们希望这个插件能做什么。</p><p>首先：我们希望从时间维度分析前端构建过程中的时间消耗发生在哪个阶段、哪些文件与哪些依赖。</p><p>其次：我们希望通过耗时分析给到用户<u>结论</u>与<u>帮助</u>。包括减少用户代码的构建耗时及依赖的构建耗时。</p><p>基于以上需求，左边手绘了一下 PRD，右边是最后实现的报告页面。为了更直接的把建议给到用户，所以再一次把建议内容提前。</p><div class="table-wrap"><table class="lake-table" style="width: 753px;"><colgroup><col width="377" span="1" /><col width="377" span="1" /></colgroup><tbody><tr style="height: 33px;"><td><p><p class="unsupported-card">此处原文包含 image 内容。</p></p></td><td><p><p class="unsupported-card">此处原文包含 image 内容。</p></p></td></tr></tbody></table></div><h1 id="8FNSY">实战：指引优化 @alipay/alertportal</h1><p>@alipay/alertportal 是蚂蚁前端监控的前端项目<span>。构建部署时间平均在 1 ~ 2 分钟。</span>我们尝试使用这个插件去减少它的构建时长。这个项目是一个 bigfish 项目，所以需要在 config.js 里使用 chainWebpack 去加载这个插件：</p><pre><code class="language-typescript">export default {
+  // ...原有配置
+  chainWebpack(config) {
+      config.plugin('ProfilingAnalyzer')
+        .use(ProfilingAnalyzer, [])
+      .end()
+    }
+}</code></pre><p><code>npm run build</code> 之后看下报告。</p><p style="text-align: center;"><figure><img src="../assets/images/erq3gp-07.png" alt="image.png" width="839" height="1161" loading="lazy" /></figure>插件已经识别出来几个比较值得注意的问题</p><p>业务代码的头部耗时居然都在 10 秒级别。先放一下。</p><ol start="1"><li>less 文件加载耗时特别长。</li><li>依赖中， <code>antd</code> ,  <code>lodash</code> , <code>core-js</code>   等耗时特别长。</li></ol><p>分别看一下</p><ol start="1"><li>把 antd external 掉。因为要 external 掉 antd，所以 React 也要 external 掉。<span>非常立竿见影，构建时间减少到 49 秒，node_modules 只剩下 141 个模块，构建时间也大幅度减少。</span><figure><img src="../assets/images/erq3gp-08.png" alt="image.png" width="423" height="366" loading="lazy" /></figure></li></ol><ol start="2"><li>对于 less 文件，例如 colorTag.module.less，看一下其实是在 less 里 import 了 <code>antd/lib/dropdown/style/index.less</code> 。其实除了引入样式并无它用。直接将 less 里的 import 提到 js 里。再减 10s：<br /><figure><img src="../assets/images/erq3gp-09.png" alt="image.png" width="376" height="35" loading="lazy" /></figure></li></ol><h1 id="mayeA">REFERENCES</h1><p>[1] Understanding Boxplots <a href="https://towardsdatascience.com/understanding-boxplots-5e2df7bcbd51" target="_blank">https://towardsdatascience.com/understanding-boxplots-5e2df7bcbd51</a> </p>
+          </div>
+        </article>
+      </div>
+    </main>
+    
+  </body>
+</html>

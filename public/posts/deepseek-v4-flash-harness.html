@@ -1,0 +1,627 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="基于五类办公 Agent 任务 trace，对比 DeepSeek-V4-Flash 与 Claude Opus 4.8，并复盘 Harness 调优后的收敛效果。" />
+    <title>DeepSeek-V4-Flash Agent Trace：从模型对比到 Harness 调优 · 生活倒影</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;700&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../styles.css" />
+  </head>
+  <body>
+    <main class="article-shell">
+      <a class="back-link" href="../index.html">← 首页</a>
+      <div class="article-layout">
+        <aside class="article-toc" aria-label="章节目录">
+        <p>目录</p>
+        <nav>
+          <a class="toc-depth-2" href="#section-1">背景</a>
+          <a class="toc-depth-2" href="#section-2">基线结果</a>
+          <a class="toc-depth-2" href="#section-3">任务观察</a>
+          <a class="toc-depth-2" href="#section-9">行为画像</a>
+          <a class="toc-depth-2" href="#section-10">模型画像</a>
+          <a class="toc-depth-2" href="#section-11">推荐路由</a>
+          <a class="toc-depth-2" href="#section-12">Harness 调优效果</a>
+          <a class="toc-depth-2" href="#section-14">先看 Trace</a>
+          <a class="toc-depth-2" href="#section-15">模型族 Prompt</a>
+          <a class="toc-depth-2" href="#section-16">ToolSearch</a>
+          <a class="toc-depth-2" href="#section-20">DeepResearch</a>
+          <a class="toc-depth-2" href="#section-22">Workflow</a>
+          <a class="toc-depth-2" href="#section-24">GUI Agent</a>
+          <a class="toc-depth-2" href="#section-26">实验汇总</a>
+          <a class="toc-depth-2" href="#section-27">设计原则</a>
+          <a class="toc-depth-2" href="#section-35">如何理解</a>
+          <a class="toc-depth-2" href="#section-36">数据与口径说明</a>
+        </nav>
+      </aside>
+        <article class="article-page">
+          <header class="article-header">
+            <h1>DeepSeek-V4-Flash Agent Trace：从模型对比到 Harness 调优</h1>
+            <time datetime="2026-08-04">2026-08-04</time>
+          </header>
+          <div class="article-content">
+            <h2 id="section-1">背景</h2>
+<p>今天用办公评测集在自家产品跑了 DeepSeek-V4-Flash-0731。因 Harness 偏 Claude Code，ToolSearch、workflow、GUI 都不太顺，轮次高、Deep Research 易发散。但模型底子好，顺着 Trace 调一下就收敛了。Harness 不是通用静态配置，接入质量取决于 Model × Harness × Tool × Task。</p>
+<div class="callout callout-info"><p><strong>核心结论</strong>：Agent 的实际表现不是模型的单变量函数，而是 <strong>Model × Harness × Tool Exposure × Task Type</strong> 的联合结果。DeepSeek-V4-Flash 不是「不会使用工具」，而是「会做、能磨出来，但很难及时收束」。只调整 Harness 后，四类真实任务均明显收敛，其中 GUI 从历史平均 73.7 轮降到 23 轮。</p>
+</div><h2 id="section-2">基线结果</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th><strong>指标</strong></th>
+<th><strong>DeepSeek-V4-Flash</strong></th>
+<th><strong>Claude Opus 4.8</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>综合分</td>
+<td>73.8</td>
+<td><strong>87.2</strong></td>
+</tr>
+<tr>
+<td>两模型正面对比</td>
+<td>1/5 领先（PPT）</td>
+<td><strong>4/5 领先</strong></td>
+</tr>
+<tr>
+<td>全榜单单项第一</td>
+<td>0/5</td>
+<td><strong>3/5</strong></td>
+</tr>
+<tr>
+<td>工具名错误</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>运行状态 completed</td>
+<td>15/15</td>
+<td>15/15</td>
+</tr>
+<tr>
+<td>代表性交付事故</td>
+<td>Finance 后台任务未等完 2/3</td>
+<td>PPT 未产出文件 1/3</td>
+</tr>
+</tbody></table></div>
+<p>这里最值得注意的是：<strong>completed 不等于 delivered</strong>。模型结束了会话，不代表用户真正拿到了报告或文件。DeepSeek 的 Finance 和 Claude 的 PPT，分别展示了两种不同的交付失败。</p>
+<h2 id="section-3">任务观察</h2>
+<h3 id="section-4">1. 语雀读取：能读对，但绕路明显</h3>
+<ul>
+<li>DeepSeek：平均 25.3 turns，质量分 85.7。</li>
+<li>Claude：排除一次连接器暴露异常后平均 9 turns，质量分 94。</li>
+<li>DeepSeek 每次通常连续执行 4～5 次 <code>ToolSearch</code>，实际有效路径只有 <code>resolve_url → doc_detail</code>。</li>
+<li>其中一次在正文已经足够总结时，仍然因为一张低相关视频封面询问用户，最终等待超时。</li>
+</ul>
+<p>这说明 DeepSeek 能正确读取文档，也能输出完整总结，但缺少「当前证据已经满足需求」的判断。Claude 的路径更接近最短解。</p>
+<h3 id="section-5">2. Web Search：搜得更多，没有转化成更好的答案</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th><strong>指标</strong></th>
+<th><strong>DeepSeek</strong></th>
+<th><strong>Claude</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>平均 turns</td>
+<td>33.3</td>
+<td><strong>9.3</strong></td>
+</tr>
+<tr>
+<td>Grounding</td>
+<td>90</td>
+<td><strong>94</strong></td>
+</tr>
+<tr>
+<td>最终质量</td>
+<td>73.3</td>
+<td><strong>94</strong></td>
+</tr>
+<tr>
+<td>平均工具数</td>
+<td>17</td>
+<td><strong>6</strong></td>
+</tr>
+</tbody></table></div>
+<p>DeepSeek 通常搜索 4～10 次、抓取约 8 个页面；Claude 通常只搜索 2～3 次、抓取 2～3 个关键来源。</p>
+<p>DeepSeek 的问题不是证据太少，恰恰是证据过多：没有做好来源优先级、边际收益判断和结论压缩。最终报告更长、更全，但核心定义、概念边界和工程判断没有因此更准确，反而容易混入相关性较弱或未经充分验证的材料。</p>
+<h3 id="section-6">3. Browser Use：最能暴露 Agent 策略差距</h3>
+<ul>
+<li>DeepSeek：平均 73.7 turns，范围 35～123；grounding 90，最终质量 70。</li>
+<li>Claude：平均 13 turns；grounding 95，最终质量 88。</li>
+</ul>
+<p>Claude 的典型路径是：导航、观察页面、填写、提交、再观察、获取内容。DeepSeek 的路径则更容易进入重复循环：反复点击、截图、执行 JS、等待，再继续执行 JS。</p>
+<p>最长的一条 DeepSeek trace 出现十多次 <code>browser_execute_js</code>。这说明它没有建立稳定的页面状态模型，也缺少 no-progress 检测和清晰的退出条件。</p>
+<p>但 DeepSeek 最终仍然 3/3 完成，证明它的页面理解和工具能力并不差。问题主要发生在策略层：一旦进入 GUI 局部循环，它倾向于「靠耐力把任务磨出来」，成本、稳定性和可预测性都较弱。</p>
+<h3 id="section-7">4. Finance：同时出现「过度执行」和「提前结束」</h3>
+<p>DeepSeek 的三次 Finance 呈现出明显的两极分化：</p>
+<ol>
+<li>一次自行完成研究，运行到 198 turns、41 次工具调用、约 11.6 万输出 token，生成了一份很长的报告。</li>
+<li>两次启动后台 <code>deep-research Workflow</code> 后，直接告诉用户「正在运行，完成后继续」，随后当前会话结束。</li>
+<li>Leaderboard 因此记录 Finance delivery gate 0/3，综合质量分 58。</li>
+</ol>
+<p>两次短跑失败的本质是：模型把「工作已派发」误判成了「用户任务已完成」。后台 Workflow 已启动，不等于报告已经交付。</p>
+<p>完整跑完的报告内容很丰富，但自动 critic 给出的 factuality 为 70、效率为 43。它体现出 DeepSeek 的典型倾向：搜索量很大、数字很多，但逐项事实校准并没有同步增强。</p>
+<p>Claude 的 Finance 得分也只有 70.2，而且有一次未完整落盘。因此这个任务不能简单理解成「Claude 很强」，而是 DeepSeek 在交付状态机上又额外丢了一层分。两者都不适合在没有事实核验和盲审的情况下直接对外发布投资研究。</p>
+<h3 id="section-8">5. PPT：DeepSeek 唯一明确领先的任务</h3>
+<ul>
+<li>DeepSeek：86.5，3/3 产出 PPT，平均 57.3 turns。</li>
+<li>Claude：80.5，2/3 产出 PPT，平均 39.3 turns。</li>
+<li>DeepSeek 的平均墙钟时间约 239 秒，Claude 约 678 秒；由于批次和环境不同，时间数据只作参考。</li>
+</ul>
+<p>在「写脚本 → 渲染 → 检查 → 修改 → 再渲染」这种确定性较强的工程循环中，DeepSeek 的耐力转化成了正收益。虽然过程更长、token 更多，但产物交付率更高。</p>
+<h2 id="section-9">行为画像</h2>
+<div class="callout callout-warning"><p>下面前半部分是 trace 直接支持的观察，后半部分是基于行为模式的工程推断。推断有较强迹象，但不能替代对训练配方与运行时实现的直接核验。</p>
+</div><ol>
+<li><strong>平均轮次明显高于 Claude Opus 4.8。</strong>五类任务里，DeepSeek 的平均轮次均更高：语雀 25.3 vs 9、Web Search 33.3 vs 9.3、Browser Use 73.7 vs 13、Finance 74 vs 21.7、PPT 57.3 vs 39.3。这不是某个任务的偶发退化，而是贯穿整个 Agent Loop 的收束问题。</li>
+<li><strong>Browser Use 明显差很多，GUI post-training 覆盖看起来不足。</strong>从重复 click/snapshot 到十多次 <code>execute_js</code>，模型没有形成稳定的页面状态建模、无进展检测和退出策略。用更直白的话说，这部分不像经过高质量、多轮浏览器轨迹的充分训练。</li>
+<li><strong>DeepResearch 存在轮次爆炸和提前结束两个极端。</strong>同一任务既能跑到 198 turns，也会在 12 turns 时把后台 Workflow 的「已启动」当成「已交付」。这指向终止奖励、预算控制、异步任务状态识别和交付 verifier 都没有训扎实。</li>
+<li><strong>Claude Code 的 Workflow 工具语义没有真正学会。</strong>模型会调用工具，却不等待后台 Workflow 完成，也不检查最终产物。如果曾在 Claude Code + Workflow 环境中做过系统性的强化学习或轨迹蒸馏，这类高频状态错误通常应该被明显压低。</li>
+</ol>
+<p>因此，trace <strong>强烈支持</strong>一个判断：DeepSeek-V4-Flash 的主训练与 post-training 环境大概率不是 Claude Code 原生 Harness，更像是在自研 Harness 中完成训练后，再接入 Claude Code 工具协议做兼容。换句话说，「自研 Harness」的迹象很强；但仅凭这些行为 trace，还不足以排除工具描述、集成层状态回传或运行时适配缺陷等替代解释。</p>
+<h2 id="section-10">模型画像</h2>
+<p><strong>优势</strong></p>
+<ul>
+<li>工具选择基本正确，15 条 trace 的工具名错误为 0。</li>
+<li>愿意持续尝试，复杂 GUI 和 PPT 都能磨出来。</li>
+<li>Endpoint 很快，尽管 turns/token 很高，墙钟时间仍常低于 Claude。</li>
+<li>长报告结构化能力不错，能主动补充风险、变量和证伪信号。</li>
+<li>对明确的工程反馈响应较好，适合 artifact-driven 工作。</li>
+</ul>
+<p><strong>短板</strong></p>
+<ul>
+<li>缺乏信息充分性判断，不知道什么时候该停。</li>
+<li>计划和思考重复，常把任务要求重新展开多遍。</li>
+<li>搜索数量与最终质量不成正比，证据筛选弱于证据收集。</li>
+<li>GUI 缺少明确状态机，容易重复点击、截图和执行 JS。</li>
+<li>后台任务生命周期理解不牢，「启动」与「完成」边界模糊。</li>
+<li>长篇报告中的事实表达偏自信，数字越多，核验风险越高。</li>
+</ul>
+<p>一个形象但相对准确的概括是：</p>
+<blockquote>
+<p>Claude 像一个知道如何快速交付的资深执行者；DeepSeek 像一个精力旺盛、动手能力很强，但需要项目经理替它控制范围和验收的执行者。</p>
+</blockquote>
+<h2 id="section-11">推荐路由</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th><strong>任务类型</strong></th>
+<th><strong>推荐模型</strong></th>
+<th><strong>必要门禁</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>语雀读取、知识总结</td>
+<td>Claude Opus 4.8</td>
+<td>连接器 readiness 检查</td>
+</tr>
+<tr>
+<td>Web 调研与综合</td>
+<td>Claude Opus 4.8</td>
+<td>要求正文来源与引用</td>
+</tr>
+<tr>
+<td>登录态 Browser Use</td>
+<td>Claude Opus 4.8</td>
+<td>页面状态校验、禁止无进展循环</td>
+</tr>
+<tr>
+<td>PPT / 文件生成</td>
+<td>DeepSeek-V4-Flash 可优先</td>
+<td>文件存在、可打开、内容完整</td>
+</tr>
+<tr>
+<td>Finance 研究</td>
+<td>两者均需审核</td>
+<td>事实核验、盲审、交付状态门禁</td>
+</tr>
+</tbody></table></div>
+<p>成本方面不能仅凭 trace 下结论。DeepSeek 的 token 累计量显著更大，但 Flash 的单价和生成速度可能抵消一部分；需要结合真实账单计算 quality-per-dollar。</p>
+<h2 id="section-12">Harness 调优效果</h2>
+<p>第二组实验是在上面这组基线之后做的。原问题是「问题在哪里」，这里回答的是「只改 harness，能把问题改善到什么程度」。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th><strong>类别</strong></th>
+<th><strong>内容</strong></th>
+<th><strong>用途</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Harness 实现</td>
+<td>模型族 system prompt、connector readiness、WebResearch 收敛、Workflow 裁剪、GUI few-shot</td>
+<td>复核具体实现与测试</td>
+</tr>
+<tr>
+<td>优化前基线</td>
+<td>DeepSeek V4 Flash 与 Claude Opus 4.8，五类任务各 n=3</td>
+<td>提供模型横向对照与优化前指标</td>
+</tr>
+<tr>
+<td>优化后案例</td>
+<td>Yuque、WebSearch、Finance、GUI 四个真实产品路径，当前为 n=1</td>
+<td>验证 Harness 优化方向</td>
+</tr>
+</tbody></table></div>
+<h3 id="section-13">案例汇总</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th><strong>案例</strong></th>
+<th><strong>问题与 Harness 优化</strong></th>
+<th><strong>Claude Opus 4.8 基线</strong></th>
+<th><strong>DeepSeek 优化前</strong></th>
+<th><strong>DeepSeek 优化后</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Yuque</td>
+<td><strong>问题</strong>：Connector 尚未 ready，模型反复 ToolSearch。<br/><strong>优化</strong>：短 few-shot + 首条消息前 readiness gate。</td>
+<td>14.7 轮 / 7.7 工具</td>
+<td>25.3 轮 / 8.0 工具<br/>ToolSearch：5 / 5 / 4 次</td>
+<td><strong>14 轮 / 4 工具</strong> / 55.5 秒<br/>ToolSearch：<strong>1 次</strong></td>
+</tr>
+<tr>
+<td>WebSearch</td>
+<td><strong>问题</strong>：持续扩展来源，缺少基于证据覆盖度的停止条件。<br/><strong>优化</strong>：在 web_research 工具内增加证据缺口与停止契约。</td>
+<td>9.3 轮 / 6.0 工具</td>
+<td>33.3 轮 / 17.0 工具</td>
+<td><strong>20 轮 / 8 工具</strong> / 82.9 秒</td>
+</tr>
+<tr>
+<td>Finance</td>
+<td><strong>问题</strong>：Workflow 启动后提前结束，或前台研究循环膨胀。<br/><strong>优化</strong>：DeepSeek 禁用 Workflow + WebResearch 收敛提示。</td>
+<td>21.7 轮 / 14.7 工具</td>
+<td>74.0 轮 / 15.7 工具<br/>极端样本 198 轮；2 / 3 次 Workflow 提前返回</td>
+<td><strong>30 轮 / 15 工具</strong> / 223.2 秒<br/>前台完成并交付报告</td>
+</tr>
+<tr>
+<td>GUI</td>
+<td><strong>问题</strong>：重复 snapshot、click 与 execute_js，缺少页面终点判断。<br/><strong>优化</strong>：通用 Browser 最短路径 few-shot；保留 execute_js。</td>
+<td>13.0 轮 / 8.3 工具</td>
+<td>73.7 轮 / 28.3 工具</td>
+<td><strong>23 轮 / 8 工具</strong> / 56.7 秒<br/>execute_js：0 次</td>
+</tr>
+</tbody></table></div>
+<h2 id="section-14">先看 Trace</h2>
+<p>历史基线包含五类任务，每类各跑 3 次。DeepSeek 全部完成，但平均轮次普遍高于 Claude Opus 4.8：</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>任务</th>
+<th align="right">DeepSeek 平均轮次 / 工具数</th>
+<th align="right">Claude 平均轮次 / 工具数</th>
+<th>主要症状</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Yuque</td>
+<td align="right">25.3 / 8.0</td>
+<td align="right">14.7 / 7.7</td>
+<td><code>ToolSearch</code> 连续重复</td>
+</tr>
+<tr>
+<td>WebSearch</td>
+<td align="right">33.3 / 17.0</td>
+<td align="right">9.3 / 6.0</td>
+<td>来源越搜越多，但答案没有同步变好</td>
+</tr>
+<tr>
+<td>GUI</td>
+<td align="right">73.7 / 28.3</td>
+<td align="right">13.0 / 8.3</td>
+<td>重复 snapshot、click、execute_js，缺少退出条件</td>
+</tr>
+<tr>
+<td>Finance</td>
+<td align="right">74.0 / 15.7</td>
+<td align="right">21.7 / 14.7</td>
+<td>一次跑到 198 轮；两次把 Workflow「已启动」当成「已完成」</td>
+</tr>
+<tr>
+<td>PPT</td>
+<td align="right">57.3 / 24.3</td>
+<td align="right">39.3 / 21.3</td>
+<td>轮次仍多，但反复修产物在这里产生了正收益</td>
+</tr>
+</tbody></table></div>
+<p>这组数据有一个很重要的信号：DeepSeek 的工具名错误是 0，说明它并不是完全不会使用工具。真正拉长路径的，是四个更靠近 harness 的问题：</p>
+<ol>
+<li>工具还没有注册完成，模型已经开始搜索。</li>
+<li>工具返回结果后，没有明确的「继续」与「停止」契约。</li>
+<li>Harness 暴露了模型不适配的能力，例如后台 <code>Workflow</code>。</li>
+<li>对 GUI 状态变化和任务终点缺少短而具体的示范。</li>
+</ol>
+<p>因此，这次没有直接加「最多 3 次」「最多抓 4 页」之类的硬预算。硬预算能截断循环，却不一定教会模型做对决策。我们优先修正工具可见性、工具契约和策略先验。</p>
+<h2 id="section-15">模型族 Prompt</h2>
+<p>同一套 system prompt 服务所有模型，看起来最简单，实际上会把模型差异推给线上任务承担。Claude 熟悉的工具约定，不代表 DeepSeek 也在相同训练分布里见过。</p>
+<p>第一步是把 system prompt 拆成稳定模块，再按模型族提供 <code>append</code> / <code>replace</code> 两种覆写方式。模型族只负责选择稳定规则；用户、会话、时间和本机环境仍然留在动态 reminder 中，避免污染可缓存的 system prompt。</p>
+<p>这样做的价值不只是「给 DeepSeek 多写几句提示词」，而是建立了一条可回滚、可版本化、不会影响 Claude 的模型适配通道。后面的 ToolSearch 与 GUI few-shot 都通过这条通道进入。</p>
+<h2 id="section-16">ToolSearch</h2>
+<h3 id="section-17">3.1 为什么只加 few-shot 还不够</h3>
+<p>历史 Yuque trace 中，DeepSeek 每次会调用 4～5 次 <code>ToolSearch</code>。我们先加了一个极短示例：读取语雀 URL 时，一次性选择 <code>resolve_url</code> 与 <code>doc_detail</code>，随后直接调用返回的工具，不再搜索。</p>
+<p>只加 few-shot 后，<code>ToolSearch</code> 从历史的 5 / 5 / 4 次降到 3 次，有改善，但没有收敛到理想路径。</p>
+<p>继续看 trace 后发现，重复搜索并不全是策略问题：首条用户消息进入模型时，远端 connector 仍处于初始化阶段。模型第一次搜索不到完整工具，只能继续试。换句话说，我们在提示词里告诉它「搜一次」，运行时却没有保证「第一次搜索时工具已经存在」。</p>
+<h3 id="section-18">3.2 在首条消息前加 connector readiness gate</h3>
+<p>更合理的时序是：只对 DeepSeek、只针对本轮显式启用的远端 connector，在首条用户消息进入模型前确认两件事：</p>
+<ol>
+<li>connector proxy 已经拿到工具列表，并发出 <code>tools/list_changed</code>；</li>
+<li>Claude Agent SDK 的 <code>mcpServerStatus</code> 已经显示目标 server 为 <code>connected</code>。</li>
+</ol>
+<p>等待有 20 秒超时、失败状态快速返回，并响应会话取消。Claude 等模型保持原启动路径。</p>
+<p>这里还有一个容易踩的坑：Browser 是本地动态 MCP，不依赖远端 connector 初始化。如果只按「connector 类型」粗粒度等待，会把 Browser 也纳入门禁，反而阻塞首轮。因此 readiness gate 必须区分「本地动态能力」与「远端显式连接器」。</p>
+<h3 id="section-19">3.3 结果</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>阶段</th>
+<th align="right">ToolSearch 次数</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>历史 DeepSeek n=3</td>
+<td align="right">5 / 5 / 4</td>
+<td>工具未到位与策略重复叠加</td>
+</tr>
+<tr>
+<td>只加 few-shot</td>
+<td align="right">3</td>
+<td>有改善，仍会轮询</td>
+</tr>
+<tr>
+<td>few-shot + readiness gate</td>
+<td align="right"><strong>1</strong></td>
+<td>55 秒完成，总工具调用 4 次</td>
+</tr>
+</tbody></table></div>
+<p>这个实验最值得复用的结论是：<strong>Prompt 不能弥补错误的工具时序。工具搜索的前提，是工具目录已经稳定。</strong></p>
+<h2 id="section-20">DeepResearch</h2>
+<p>WebResearch 的问题不是不会搜，而是每轮都能为「再搜一点」找到理由。把一大段研究方法塞进 system prompt，既增加所有任务的上下文，也离真正做决策的时刻太远。</p>
+<p>比起继续加长 system prompt，更合适的位置是 <code>web_research</code> 的工具描述和返回结果。模型每次准备继续搜索时，都会重新看到这几条判断标准：</p>
+<ul>
+<li>再次搜索前，必须指出仍未支持的具体目的、主张或矛盾；</li>
+<li>新 query 必须与之前有实质差异；</li>
+<li>如果研究目的已经被证据覆盖，或新增结果主要重复已有证据，就停止浏览并开始综合；</li>
+<li>不要为了增加来源数量退回宽泛的 <code>web_search</code>。</li>
+</ul>
+<p>这不是固定限制 3 次搜索或 4 个页面，而是把「边际信息增益」变成下一轮工具调用的必要条件。</p>
+<h3 id="section-21">WebSearch 重跑</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>指标</th>
+<th align="right">历史 DeepSeek 均值</th>
+<th align="right">优化后案例</th>
+<th align="right">Claude 历史均值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>轮次</td>
+<td align="right">33.3</td>
+<td align="right"><strong>20</strong></td>
+<td align="right">9.3</td>
+</tr>
+<tr>
+<td>工具数</td>
+<td align="right">17.0</td>
+<td align="right"><strong>8</strong></td>
+<td align="right">6.0</td>
+</tr>
+<tr>
+<td>墙钟时间</td>
+<td align="right">—</td>
+<td align="right">83 秒</td>
+<td align="right">—</td>
+</tr>
+<tr>
+<td>有效性</td>
+<td align="right">—</td>
+<td align="right">100%</td>
+<td align="right">—</td>
+</tr>
+</tbody></table></div>
+<p>工具路径收敛为：先搜索工具，再做一次 web research，抓取四个正文来源，最后写入产物。它仍然比 Claude 长，但没有继续宽泛搜索，且交付了完整产物。</p>
+<h2 id="section-22">Workflow</h2>
+<p>Finance 的历史 trace 暴露了两个极端：一次由前台循环完整执行，跑到 198 轮；另外两次启动后台 <code>deep-research Workflow</code> 后，直接告诉用户「任务正在运行」，当前会话随即结束。</p>
+<p>这说明 DeepSeek 对 Claude Code <code>Workflow</code> 的生命周期语义并不稳定：它容易把「派发成功」误判为「用户任务完成」。如果暂时没有可靠的后台任务交付门禁，继续暴露这个工具只会扩大状态空间。</p>
+<p>所以，SDK 的 <code>disallowedTools</code> 只对 DeepSeek 屏蔽 <code>Workflow</code>，Claude 保持原样。这样既缩小了 DeepSeek 的错误状态空间，也不会牺牲其他模型已经掌握的后台能力。普通、轻量和插件去重路径都有对应测试。</p>
+<h3 id="section-23">Finance 重跑</h3>
+<p>优化后的 Finance 案例用 30 轮、15 次工具、223 秒完成，并生成了完整的宁德时代研究报告。整个过程没有暴露 <code>Workflow</code>，也没有调用 <code>Skill(deep-research)</code>。</p>
+<p>这组结果有两层含义：</p>
+<ul>
+<li>相比历史 198 轮极端样本，前台研究循环明显收敛；</li>
+<li>15 次工具与 Claude 历史均值 14.7 已经接近，剩余差距更多体现在思考与消息轮次，而不是继续堆工具。</li>
+</ul>
+<p>禁用不是最终形态。等未来有可靠的 <code>running → completed → artifact verified</code> 状态机后，Workflow 可以重新开放。但在此之前，<strong>不兼容能力的正确 harness 策略是裁剪，而不是期待模型临场理解。</strong></p>
+<h2 id="section-24">GUI Agent</h2>
+<p>Browser Use 是历史差距最大的任务。最差的一条 DeepSeek trace 达到 123 轮，并出现十多次 <code>execute_js</code>。但我们没有选择延迟开放或隐藏 <code>execute_js</code>：它在复杂页面上仍是有价值的逃生工具，问题不在工具本身，而在模型没有形成「观察一次、行动一次、状态不变就停止重复」的策略。</p>
+<p>这里真正需要的只是一个很短的通用示例。它没有绑定具体网站，也没有把工具预算写死，只示范三个关键动作：一次选齐工具、基于页面状态分支、满足目标后结束。</p>
+<h3 id="section-25">GUI 重跑</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>指标</th>
+<th align="right">历史 DeepSeek 均值</th>
+<th align="right">优化后案例</th>
+<th align="right">Claude 历史均值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>轮次</td>
+<td align="right">73.7</td>
+<td align="right"><strong>23</strong></td>
+<td align="right">13.0</td>
+</tr>
+<tr>
+<td>工具数</td>
+<td align="right">28.3</td>
+<td align="right"><strong>8</strong></td>
+<td align="right">8.3</td>
+</tr>
+<tr>
+<td>墙钟时间</td>
+<td align="right">—</td>
+<td align="right">57 秒</td>
+<td align="right">—</td>
+</tr>
+<tr>
+<td>execute_js</td>
+<td align="right">多次，最长样本十余次</td>
+<td align="right"><strong>0</strong></td>
+<td align="right">—</td>
+</tr>
+<tr>
+<td>有效性 / 幻觉</td>
+<td align="right">—</td>
+<td align="right">100% / 0</td>
+<td align="right">—</td>
+</tr>
+</tbody></table></div>
+<p>实际路径是：一次搜索工具，然后导航、观察、点击、再观察、再点击、最终获取内容。工具数已经略低于 Claude 历史均值，且在 <code>execute_js</code> 保持可用的情况下自然没有调用它。</p>
+<p>这说明对 GUI Agent 来说，few-shot 最有价值的不是教「按钮怎么点」，而是教「什么时候页面状态已经足够回答」。</p>
+<h2 id="section-26">实验汇总</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>场景</th>
+<th>Harness 改动</th>
+<th>历史表现</th>
+<th>优化后案例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Yuque</td>
+<td>ToolSearch few-shot + 远端 connector 就绪门禁</td>
+<td>ToolSearch 5 / 5 / 4 次</td>
+<td><strong>1 次</strong>，55 秒</td>
+</tr>
+<tr>
+<td>WebSearch</td>
+<td>工具内证据缺口与停止契约</td>
+<td>33.3 轮 / 17 工具</td>
+<td><strong>20 轮 / 8 工具</strong>，83 秒</td>
+</tr>
+<tr>
+<td>Finance</td>
+<td>DeepSeek 禁用 Workflow + research 收敛提示</td>
+<td>均值 74 轮；极端 198 轮</td>
+<td><strong>30 轮 / 15 工具</strong>，223 秒</td>
+</tr>
+<tr>
+<td>GUI</td>
+<td>通用 Browser 最短路径 few-shot</td>
+<td>73.7 轮 / 28.3 工具</td>
+<td><strong>23 轮 / 8 工具</strong>，57 秒</td>
+</tr>
+</tbody></table></div>
+<p>结果并不意味着 DeepSeek 已经全面追平 Claude：WebSearch 与 GUI 的轮次仍更高，报告质量也不能只由轮次判断。但工具调用数显著靠近合理区间，说明原先的大量浪费确实来自 harness 与模型训练分布不匹配，而不是模型能力的硬上限。</p>
+<h2 id="section-27">设计原则</h2>
+<h3 id="section-28">1. 先保证工具可用，再约束模型少搜</h3>
+<p>如果 connector 尚未 ready，任何「不要重复 ToolSearch」都在要求模型相信一个不稳定的工具目录。Readiness 是运行时正确性，不是 prompt 技巧。</p>
+<h3 id="section-29">2. 把停止条件放到产生决策的地方</h3>
+<p>搜索是否继续，应该由搜索工具返回的证据覆盖情况触发；GUI 是否继续，应该由最新页面状态触发。越靠近决策点，提示越短，也越容易生效。</p>
+<h3 id="section-30">3. Few-shot 要短、通用、带终点</h3>
+<p>有效示例不需要复述完整 SOP。它只需要展示「一次选齐工具」「观察后分支」「满足后结束」。没有终点的 few-shot，只会教会模型更熟练地循环。</p>
+<h3 id="section-31">4. 工具暴露本身就是策略</h3>
+<p>Harness 不应把所有能力无差别交给所有模型。对生命周期语义不兼容的 Workflow，暂时禁用比增加更多解释更可靠。</p>
+<h3 id="section-32">5. 模型族适配必须可版本化、可回滚</h3>
+<p>Prompt 覆写通过模型族配置进入，并带独立版本；Claude 路径保持不变。这样每个实验都能明确回答「哪条规则影响了哪个模型」。</p>
+<h3 id="section-33">6. 用真实产品入口验收，不只看单测</h3>
+<p>这次最关键的两个问题——远端 connector 未 ready、Browser 被错误纳入远端门禁——都只有在真实 Electron 产品路径里才会暴露。单测证明逻辑边界，trace 证明用户路径。</p>
+<h3 id="section-34">7. 新模型接入必须做四维消融</h3>
+<p>可以把 Agent 表现抽象为：</p>
+<p><strong>Agent Performance = f(Model, Harness, Tool Exposure, Task Type)</strong></p>
+<p>单独更换模型、沿用原 Harness 后直接跑总榜，只能得到「整体变好或变差」，无法定位差异来自模型能力、运行时策略、工具暴露还是任务结构。新模型接入应至少覆盖以下四类消融：</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th><strong>维度</strong></th>
+<th><strong>控制变量</strong></th>
+<th><strong>主要消融项</strong></th>
+<th><strong>回答的问题</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Model</td>
+<td>固定 Harness、Tool Exposure、Task Type</td>
+<td>不同模型族、模型版本、reasoning 配置</td>
+<td>差异是否来自模型本身</td>
+</tr>
+<tr>
+<td>Harness</td>
+<td>固定 Model、Tool Exposure、Task Type</td>
+<td>模型族 prompt、readiness gate、停止契约、交付门禁</td>
+<td>运行时策略是否与模型训练分布匹配</td>
+</tr>
+<tr>
+<td>Tool Exposure</td>
+<td>固定 Model、Harness、Task Type</td>
+<td>Workflow 开关、execute_js 可见性、connector 组合、工具数量</td>
+<td>工具集合是否扩大了错误状态空间</td>
+</tr>
+<tr>
+<td>Task Type</td>
+<td>固定 Model、Harness、Tool Exposure</td>
+<td>读取、开放研究、GUI、文件交付、后台任务</td>
+<td>同一策略在哪类任务上有效或失效</td>
+</tr>
+</tbody></table></div>
+<p>新模型接入流程应从「接通接口 → 跑总榜」调整为「最小任务集 → 四维消融 → 固化模型族策略 → n≥3 回归」。总榜用于评价结果，消融实验用于解释结果并指导 Harness 调优。</p>
+<h2 id="section-35">如何理解</h2>
+<p>历史基线是 n=3，改后数据目前每个任务只有一次真实重跑，因此本文只能说明「方向有效」，不能把下降比例当成稳定收益。模型服务、连接器、外部网页和缓存状态都会带来波动。</p>
+<p>如果要把这套方案用于稳定的模型路由，还需要按同一任务集补齐至少 n=3，重点观察：</p>
+<ul>
+<li>ToolSearch 是否稳定保持一次；</li>
+<li>WebResearch 是否会在不同主题上重新出现宽泛搜索；</li>
+<li>Finance 是否能稳定完成交付，而不是从「提前结束」滑向另一个长循环；</li>
+<li>GUI 是否在页面结构变化后仍能维持 8～12 次左右的工具路径；</li>
+<li>回归 Claude，确认模型族覆写和 DeepSeek 专属裁剪没有旁路影响。</li>
+</ul>
+<p>即使把单次实验的波动考虑进去，这组 trace 仍然支持同一个工程判断：<strong>Harness 不是一套对所有模型开箱通用的静态配置。新模型的接入质量，取决于 Model × Harness × Tool Exposure × Task Type 的联合匹配。</strong> 当模型「能做但不会停」时，最有效的优化通常不在更长的总 Prompt，而在更准确的工具时序、更局部的停止契约、更克制的能力暴露，以及按任务类型验证这些策略是否成立。</p>
+<h2 id="section-36">数据与口径说明</h2>
+<p>评测限制：</p>
+<ol>
+<li>两组运行日期不同：Claude 主要运行于 2026 年 6 月，DeepSeek 运行于 2026 年 8 月；连接器暴露和外部页面状态可能变化。</li>
+<li>Claude trace 中 <code>thinkingBlocks=0</code> 是 provider trace 可见性差异，不能据此判断 Claude 没有推理。</li>
+<li><code>tokensIn</code> 是轨迹累计指标，不应直接等同于 API 去重后的实际计费 token。</li>
+<li>墙钟时间受到批次、网络、工具服务和 endpoint 并发情况影响，仅作方向性参考。</li>
+<li>即便考虑环境差异，Web 与 Browser Use 的路径长度差距仍然足够大，不能完全由环境解释。</li>
+</ol>
+
+          </div>
+        </article>
+      </div>
+    </main>
+    <script>
+      (() => {
+        const links = [...document.querySelectorAll(".article-toc a")];
+        const headings = links
+          .map((link) => document.getElementById(link.getAttribute("href").slice(1)))
+          .filter(Boolean);
+        if (!links.length || !headings.length) return;
+        const setActive = (id) => {
+          for (const link of links) {
+            link.toggleAttribute("aria-current", link.getAttribute("href") === "#" + id);
+          }
+        };
+        const observer = new IntersectionObserver(
+          (entries) => {
+            const visible = entries
+              .filter((entry) => entry.isIntersecting)
+              .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0];
+            if (visible) setActive(visible.target.id);
+          },
+          { rootMargin: "-18% 0px -68% 0px", threshold: 0 }
+        );
+        headings.forEach((heading) => observer.observe(heading));
+        setActive(headings[0].id);
+      })();
+    </script>
+  </body>
+</html>

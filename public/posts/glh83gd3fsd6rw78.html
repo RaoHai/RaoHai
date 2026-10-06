@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="关于在 AWS Lambda 上部署 OpenAI 流式 API 的工程实践。" />
+    <title>How to Deploy an OpenAI Streaming API on AWS Lambda Using Python. · 生活倒影</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;700&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../styles.css" />
+  </head>
+  <body>
+    <main class="article-shell">
+      <a class="back-link" href="../index.html">← 首页</a>
+      <div class="article-layout">
+        
+        <article class="article-page">
+          <header class="article-header">
+            <h1>How to Deploy an OpenAI Streaming API on AWS Lambda Using Python.</h1>
+            <time datetime="2024-04-09">2024-04-09</time>
+          </header>
+          <div class="article-content">
+            
+<p>This example shows streaming response from OpenAI completions with FastAPI on AWS Lambda.</p>
+<p>Demo: <a href="https://github.com/RaoHai/aws-lambda-response-streaming">https://github.com/RaoHai/aws-lambda-response-streaming</a></p>
+<p>Credit to <a href="https://github.com/awslabs/aws-lambda-web-adapter">aws-lambda-web-adapter</a></p>
+<figure><img src="../assets/images/glh83gd3fsd6rw78-extra-01.png" width="3120" alt="Architecture diagram" loading="lazy" /></figure>
+<h2 id="section-1">How does it work?</h2>
+<p>This example uses FastAPI provides inference API. The inference API endpoint invokes OpenAI, and streams the response. Both Lambda Web Adapter and function URL have response streaming mode enabled. So the response from OpenAI are streamed all the way back to the client.</p>
+<p>This function is packaged as a Docker image. Here is the content of the Dockerfile.</p>
+<pre><code class="language-dockerfile">FROM public.ecr.aws/docker/library/python:3.12.0-slim-bullseye
+
+COPY --from=public.ecr.aws/awsguru/aws-lambda-adapter:0.8.1 /lambda-adapter /opt/extensions/lambda-adapter
+
+# Copy function code
+COPY . ${LAMBDA_TASK_ROOT}
+# from your project folder.
+COPY requirements.txt .
+RUN pip3 install -r requirements.txt --target "${LAMBDA_TASK_ROOT}" -U --no-cache-dir
+
+CMD ["python", "main.py"]</code></pre>
+<p>Notice that we only need to add the second line to install Lambda Web Adapter.</p>
+<pre><code class="language-dockerfile">COPY --from=public.ecr.aws/awsguru/aws-lambda-adapter:0.8.1 /lambda-adapter /opt/extensions/</code></pre>
+<p>In the SAM template, we use an environment variable <code>AWS_LWA_INVOKE_MODE: RESPONSE_STREAM</code> to configure Lambda Web Adapter in response streaming mode. And adding a function url with <code>InvokeMode: RESPONSE_STREAM</code>.</p>
+<pre><code class="language-yaml">  FastAPIFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      PackageType: Image
+      MemorySize: 512
+      Environment:
+        Variables:
+          AWS_LWA_INVOKE_MODE: RESPONSE_STREAM
+      FunctionUrlConfig:
+        AuthType: NONE
+        InvokeMode: RESPONSE_STREAM
+      Policies:
+      - Statement:
+        - Sid: BedrockInvokePolicy
+          Effect: Allow
+          Action:
+          - bedrock:InvokeModelWithResponseStream
+          Resource: '*'</code></pre>
+<h2 id="section-2">Build and deploy</h2>
+<p>Run the following commends to build and deploy this example.</p>
+<pre><code class="language-bash">sam build --use-container
+sam deploy --guided</code></pre>
+<h2 id="section-3">Test the example</h2>
+<p>After the deployment completes, curl the <code>FastAPIFunctionUrl</code>.</p>
+<pre><code class="language-bash">curl -v -N --location '${{FastAPIFunctionUrl}}/api/chat/stream' \
+--header 'Content-Type: application/json' \
+--header 'Transfer-Encoding: chunked' \
+--data '{"messages":[{"role":"user","content":"Count to 100, with a comma between each number and no newlines. E.g., 1, 2, 3, ..."}],"prompt":""}'</code></pre>
+<figure><img src="../assets/images/glh83gd3fsd6rw78-extra-02.gif" width="1256" alt="Streaming response demo" loading="lazy" /></figure>
+
+          </div>
+        </article>
+      </div>
+    </main>
+    
+  </body>
+</html>

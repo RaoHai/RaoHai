@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="SourceMap 和 Pretty Print错误堆栈解析一直是雨燕监控的特色功能。在雨燕监控上，打开一个 JS 异常的详情页，雨燕会尝试找到当前堆栈对应的 SourceMap，并尝试反解源码。但很遗憾，生成 SourceMap 是一个耗时很长的过程，会让构建时间变得很长，再加上诸如 OOM..." />
+    <title>在没有 SourceMap 的情况下反解源码 · 生活倒影</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;700&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../styles.css" />
+  </head>
+  <body>
+    <main class="article-shell">
+      <a class="back-link" href="../index.html">← 首页</a>
+      <div class="article-layout">
+        
+        <article class="article-page">
+          <header class="article-header">
+            <h1>在没有 SourceMap 的情况下反解源码</h1>
+            <time datetime="2021-07-12">2021-07-12</time>
+          </header>
+          <div class="article-content">
+            <h1 id="gD0hH"><span>SourceMap 和 Pretty Print</span></h1><p><span>错误堆栈解析一直是雨燕监控的特色功能。在雨燕监控上，打开一个 JS 异常的详情页，雨燕会尝试找到当前堆栈对应的 SourceMap，并尝试反解源码。</span></p><p><span>​</span><br></p><p style="text-align: center"><figure><img src="../assets/images/dpbum7-01.png" alt="image.png" width="619" height="508" loading="lazy" /></figure></p><p><span>但很遗憾，生成 SourceMap 是一个耗时很长的过程，会让构建时间变得很长，再加上诸如 OOM 一类的问题，雨燕上的 SourceMap 生成的成功率并不高。我们经常会看到这样的界面。很无助。</span></p><p><span>​</span><br></p><p style="text-align: center"><figure><img src="../assets/images/dpbum7-02.png" alt="image.png" width="1121" height="439" loading="lazy" /></figure></p><p><span>熟悉 Chrome DevTool 的同学可能注意到 Chrome 上有个 「Pretty Print」 功能，可以把压缩混淆过的代码格式化。格式化后的代码虽然变量名仍然被混淆，但是格式相对会友好很多，至少能稍微看得懂。</span></p><p><span>​</span><br></p><p><figure><img src="../assets/images/dpbum7-03.png" alt="image.png" width="1174.5" height="608" loading="lazy" /></figure></p><p><span>那么问题来了。这个功能怎么做的。雨燕监控能不能用这样的方式解决问题。</span></p><p><span>​</span><br></p><h1 id="DcR7J"><span>先 Beautify 一下..</span></h1><p><span>​</span><br></p><p><span>以这个报错堆栈为例，第一行 </span><code><a href="https://gw.alipayobjects.com/os/chair-script/skylark/p__editor__routers__doc.7f819f85.async.js:2:3862046" target="_blank"><span>https://gw.alipayobjects.com/os/chair-script/skylark/p__editor__routers__doc.7f819f85.async.js:2:3862046</span></a></code><span> 表示这个错误是在 </span><code><span>p__editor_routers_doc.7f819f85.async.js</span></code><span> 这个文件的第 2 行，第 3862046 列出现的。那直接把文件请求下来，取 2:3862046 是不是就可以了。</span></p><pre><code class="language-plain">at e.value (https://gw.alipayobjects.com/os/chair-script/skylark/p__editor__routers__doc.7f819f85.async.js:2:3862046)
+at e.value (https://gw.alipayobjects.com/os/chair-script/skylark/p__editor__routers__doc.7f819f85.async.js:2:3862145)
+at https://gw.alipayobjects.com/os/chair-script/skylark/p__editor__routers__doc.7f819f85.async.js:2:4879956
+at Array.forEach (&lt;anonymous&gt;)
+at a.value (https://gw.alipayobjects.com/os/chair-script/skylark/p__editor__routers__doc.7f819f85.async.js:2:4879660)
+at a.&lt;anonymous&gt; (https://gw.alipayobjects.com/os/chair-script/skylark/p__editor__routers__doc.7f819f85.async.js:2:4879201)
+at a.c.emit (https://gw.alipayobjects.com/os/chair-script/skylark/p__editor__routers__doc.7f819f85.async.js:2:909580)
+at a.value (https://gw.alipayobjects.com/os/chair-script/skylark/p__editor__routers__doc.7f819f85.async.js:2:4877148)
+at a.&lt;anonymous&gt; (https://gw.alipayobjects.com/os/chair-script/skylark/p__editor__routers__doc.7f819f85.async.js:2:4870827)
+at g (https://gw.alipayobjects.com/os/chair-script/skylark/common.bef01353.async.js:2:10742)</code></pre><p style="text-align: center"><figure><img src="../assets/images/dpbum7-04.png" alt="image.png" width="588" height="105" loading="lazy" /></figure></p><p><span>​</span><br></p><p><span>确实是可行的。但是可读性很差。我们可以把它 beautify 一下，好看多了。</span></p><p><figure><img src="../assets/images/dpbum7-05.png" alt="image.png" width="707" height="232" loading="lazy" /></figure></p><p><span>但是又一个问题来了。beautify 之后文件被重新格式化，行和列跟原先对应不上了。报错中的 Line 2, Column 3862046，在 beautify 之后跑到了 Line: 119111, Column: 54 去了。这个对应关系怎么建立？</span></p><p><span>​</span><br></p><h1 id="a6BrK"><span>Beautify 不会改变 AST</span></h1><p><span>回到 Beautify 的原理，在代码反混淆的过程中，JS 本身的语义是不会改变的，也就是 AST 是不变的。所以我们可以尝试通过解析压缩过的代码和 beautify 后的代码的 AST，来建立一个他们之间的 SourceMap，从获得从 Line 2, Column 3862046 到 Line: 119111, Column: 54 的映射关系。</span></p><p><span>​</span><br></p><p><span>以这份代码为例：</span></p><pre><code class="language-javascript">Array.prototype.fill||Object.defineProperty(Array.prototype,&quot;fill&quot;,{value:function(t){if(null==this)throw new TypeError(&quot;this is null or not defined&quot;)
+for(var r=Object(this),e=r.length&gt;&gt;&gt;0,n=arguments[1],i=n&gt;&gt;0,a=0&gt;i?Math.max(e+i,0):Math.min(i,e),o=arguments[2],l=void 0===o?e:o&gt;&gt;0,h=0&gt;l?Math.max(e+l,0):Math.min(l,e);h&gt;a;)r[a]=t,a++
+return r}})</code></pre><p><span>经过 beautify 后的样子是：</span></p><pre><code class="language-javascript">Array.prototype.fill || Object.defineProperty(Array.prototype, &quot;fill&quot;, {
+    value: function(t) {
+        if (null == this) throw new TypeError(&quot;this is null or not defined&quot;)
+        for (var r = Object(this), e = r.length &gt;&gt;&gt; 0, n = arguments[1], i = n &gt;&gt; 0, a = 0 &gt; i ? Math.max(e + i, 0) : Math.min(i, e), o = arguments[2], l = void 0 === o ? e : o &gt;&gt; 0, h = 0 &gt; l ? Math.max(e + l, 0) : Math.min(l, e); h &gt; a;) r[a] = t, a++
+        return r
+    }
+})</code></pre><p><span>把他们丢到 </span><a href="https://astexplorer.net/" target="_blank"><span>https://astexplorer.net/</span></a><span> 看下他们的 AST：</span></p><div class="table-wrap"><table id="cR7u9" class="lake-table" style="width: 750px"><colgroup><col width="375"><col width="375"></colgroup><tbody><tr><td><p><p class="unsupported-card">此处原文包含 image 内容。</p></p></td><td><p><p class="unsupported-card">此处原文包含 image 内容。</p></p></td></tr></tbody></table></div><p><span>可以发现，除了 location 信息不一致，结构是完全一样的。证明了之前的设想。</span></p><p><span>​</span><br></p><h1 id="tjGU7"><span>通过 AST 建立 SourceMap</span></h1><p><span>SourceMap 的结构这里不赘述了，可以读解阮一峰老师的 </span><a href="http://www.ruanyifeng.com/blog/2013/01/javascript_source_map.html" target="_blank"><span>JavaScript Source Map 详解</span></a><span> 。Mozilla 提供了</span><a href="https://github.com/mozilla/source-map" target="_blank"><span> mozilla/source-map</span></a><span> 这个库，来生成或者消费 SourceMap。</span></p><p><span>​</span><br></p><p><span>只需要遍历 AST，使用 </span><a href="https://github.com/mozilla/source-map#sourcemapgeneratorprototypeaddmappingmapping" target="_blank"><span>SourceMapGenerator.prototype.addMapping(mapping)</span></a><span> 方法写入映射。就可以生成从 Uglified 到 Beautified 的 SourceMap。</span></p><p><span>​</span><br></p><p><span>用 </span><a href="https://github.com/acornjs/acorn" target="_blank"><span>https://github.com/acornjs/acorn</span></a><span> 库来解析。伪代码描述如下</span></p><p><span>​</span><br></p><pre><code class="language-typescript">uglify = 压缩过的源码
+beauty = 用 beautify-js 美化(uglify)
+
+uglifyTokenizer = acorn.tokenizer(uglify);
+beautyTokenizer = acorn.tokenizer(beauty);
+
+sourceMapGenerator = new SourceMapGenerator({ file });
+
+while true:
+  // 因为两者的 AST 是完全一致的，所以同步消费
+	uglifyToken = uglifyTokenizer.getToken();
+	distToken = beautyTokenizer.getToken();
+	
+  if (eof uglifyToken) {
+    break;
+  }
+
+	sourceMapGenerator.addMapping({
+  	source: 'MOCK一个',
+    name: uglifyToken.name,
+    original: uglifyToken.loc.start,
+    generated: distToken.loc.start,
+  });
+
+// 把美化过的代码当成源码原文塞进去
+generator.setSourceContent(source, beauty);</code></pre><p><span>可以生成这样一份 SourceMap：</span><figure><img src="../assets/images/dpbum7-06.png" alt="image.png" width="793" height="660" loading="lazy" /></figure></p><p><span>​</span><br></p><p><span>然后就可以用这份 SourceMap 来找到从压缩后的代码的行列好到美化过的代码的行列数的映射关系了。</span></p><pre><code class="language-javascript">const staticConsumer = await new sourceMap.SourceMapConsumer('上面生成这份'); 
+
+// 获取对应行号
+const loc = staticConsumer.originalPositionFor({ line: 10, column: 8135 });
+// loc = { source: 'MOCK一个', line: 14394, column: 34 };
+
+// 拿之前注入进去的 beautify 后的内容
+const sourceContent = staticConsumer.sourceContentFor(loc.source);
+
+const startLine = Math.max(loc.line! - topOffset, 0);
+const endLine = loc.line! + bottomOffset;
+
+// 就能拿到前后 Offset 的内容了
+const sliceSrcContent = sourceContent.split('\n').slice(startLine, endLine).join('\n');
+</code></pre><h1 id="lXxhH"><span>看下效果</span></h1><p><span>堆栈：</span></p><p><figure><img src="../assets/images/dpbum7-07.png" alt="image.png" width="1150" height="318" loading="lazy" /></figure></p><p><span>解析结果：</span></p><p><figure><img src="../assets/images/dpbum7-08.png" alt="image.png" width="911" height="564" loading="lazy" /></figure></p><p><span>虽然跟真正的源码还有比较大的差距，但是熟悉的同学应该能比较快的找到问题出在哪了……</span></p><h1 id="wxjay"><br></h1><h1 id="lRMff"><span>优化与复用结果</span></h1><p><span>​</span><br></p><p><span>很显然，每次都经过 Beautify -&gt; 遍历 AST -&gt; 生成 SourceMap 的过程是不经济的。解析比较大的文件会耗费很长的时间。以语雀为例，对语雀的 </span><code><span>p__editor__routers__doc.js</span></code><span> 文件做一遍上述操作需要耗时 90秒。显然，无论是放在客户端还是服务端做，这个耗时都是不可接受的。所以我们选择使用函数计算来跑这个任务。</span></p><p><span>​</span><br></p><p><span>又因为同一个 JS 文件所产出的美化结果是不变的，所以我们会把上面生成的 SourceMap 缓存起来。后续再请求的时候直接消费就可以了。</span></p><p><span>​</span><br></p>
+          </div>
+        </article>
+      </div>
+    </main>
+    
+  </body>
+</html>

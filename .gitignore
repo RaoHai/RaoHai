@@ -1,0 +1,8 @@
+node_modules/
+serve.log
+serve.err.log
+.wrangler/
+tmp/
+.env
+.env.*
+!.env.example

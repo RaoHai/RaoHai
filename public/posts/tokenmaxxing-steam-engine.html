@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="从 Gary Tan、Claudeonomics 到 AI 使用文化，聊 Tokenmaxxing 如何改变工程师和组织。" />
+    <title>Tokenmaxxing：当 AI 烧钱变成一场没有人敢停的军备竞赛 · 生活倒影</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;700&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../styles.css" />
+  </head>
+  <body>
+    <main class="article-shell">
+      <a class="back-link" href="../index.html">← 首页</a>
+      <div class="article-layout">
+        <aside class="article-toc" aria-label="章节目录">
+        <p>目录</p>
+        <nav>
+          <a class="toc-depth-2" href="#section-1">Tokenmaxxing</a>
+          <a class="toc-depth-2" href="#section-2">一个 13 年没写代码的人</a>
+          <a class="toc-depth-2" href="#section-3">当使用量变成排行榜</a>
+          <a class="toc-depth-2" href="#section-4">它也不只是胡乱烧钱</a>
+          <a class="toc-depth-2" href="#section-5">产出真的变多了吗</a>
+          <a class="toc-depth-2" href="#section-6">吹口哨的蒸汽机</a>
+        </nav>
+      </aside>
+        <article class="article-page">
+          <header class="article-header">
+            <h1>Tokenmaxxing：当 AI 烧钱变成一场没有人敢停的军备竞赛</h1>
+            <time datetime="2026-05-14">2026-05-14</time>
+          </header>
+          <div class="article-content">
+            <blockquote>
+<p>我们塑造了工具，然后工具塑造了我们。</p>
+<p>We shape our tools and thereafter our tools shape us.</p>
+<p>-- 麦克卢汉《理解媒介》</p>
+</blockquote>
+<h2 id="section-1">Tokenmaxxing</h2>
+<p>最近硅谷有个词很火：<strong>Tokenmaxxing</strong>。</p>
+<p>Token 是大模型的计费单位。maxxing 来自互联网亚文化里的 lookmaxxing，大概意思是在某个维度上把事情做到极致。拼在一起，就是尽可能多地烧 AI Token，把?用 AI?这件事推到极限。</p>
+<p>这个词第一次听起来像段子。多花钱也能变成方法论吗？</p>
+<p>但它确实正在变成一种新的工作伦理。工程师怎么写代码，公司怎么衡量?拥抱 AI?，硅谷怎么重新分配话语权，都开始被这个词影响。</p>
+<h2 id="section-2">一个 13 年没写代码的人</h2>
+<p>故事的引爆点来自 YC 总裁 Gary Tan。</p>
+<p>他已经 13 年没怎么写过代码。2025 年初，他重新坐回键盘前，用 Claude Code 重建了自己 2008 年的第一个创业项目 Posterous。</p>
+<p>他给了一个很夸张的对比：</p>
+<ul>
+<li>2008 年：400 万美元，6-7 人团队，一年半。</li>
+<li>2014 年：10 万美元，2 个人，三个月。</li>
+<li>2025 年：200 美元，1 个人加 AI，五天。</li>
+</ul>
+<p>200 美元对 400 万美元，五天对一年半。这种数字当然很适合传播。</p>
+<img src="../assets/images/tokenmaxxing-steam-engine-extra-01.jpg" title="null" crop="0,0,1,1" id="kfqK5" class="ne-image"><p>后来他在社交媒体上说，自己的编码速度是 2013 年的 100 倍。很多人不买账，觉得代码行数不等于生产力。Gary Tan 也较真，用公开的 Git 工具重新算逻辑代码行，剔掉注释和空行。结果更夸张：400 倍。</p>
+<p>他把这套做法叫 Tokenmaxxing。</p>
+<p>Gary Tan 的比喻是旧金山房租：旧金山很贵，但不住在旧金山的代价更贵。Token 也一样，不应该像办公用品一样能省则省。真正昂贵的不是 API 费，而是因为不舍得烧 Token，错过了模型能帮你完成的事情。</p>
+<p>黄仁勋在 GTC 2026 上也讲过类似的话。他说，如果一个年薪 50 万美元的工程师年底告诉他，自己只用了 5000 美元的 Token，他会非常抓狂。</p>
+<p>这句话的潜台词很明显：AI Token 不是成本中心，而是生产资料。不用，才像是在浪费工资。</p>
+<p>问题也从这里开始。</p>
+<h2 id="section-3">当使用量变成排行榜</h2>
+<p>2026 年 4 月，Meta 内网上线了一个叫 <strong>Claudeonomics</strong> 的排行榜。名字取自 Claude，功能很直接：追踪 8.5 万名员工的 AI Token 消耗量，按月排名，只展示前 250 名。</p>
+<p>铜、银、金、铂金、翡翠、钻石。看起来像手游段位。</p>
+<p>有人一个月烧掉 140 万美元的 Token 登顶。扎克伯格本人甚至进不了前 250。</p>
+<p>这件事如果只看表面，像是 Meta 在鼓励员工拥抱 AI。但它发生的背景是，Meta 今年接连两轮裁员，规模加起来上万人。一边冲 Token 使用量，一边大规模裁人，这两件事并不矛盾。它们更像同一件事的两面：先把人的工作流蒸馏出来，再决定还需要多少人。</p>
+<p>亚马逊那边更荒诞。内部消息说，有员工为了提高 AI 使用数据，会让公司 AI 工具 MeshClaw 执行一些没有必要的任务。公司当然可以说这些数据不直接用于绩效考核，但员工不一定这么理解。只要大家相信?积极使用 AI?会影响职业发展，刷量就会自然出现。</p>
+<p>迪士尼也在追踪 AI 使用情况。据报道，员工在 9 个工作日内累计调用 AI 模型约 46 万次，平均每 1.7 秒一次。公司还搭了 AI Adoption Dashboard。</p>
+<p>我很好奇，这里面到底有多少是真正有效的调用。</p>
+<p>《证券时报》有一句评论很准：别让 Token 消耗量成为新型形式主义。</p>
+<p>这句话看起来像传统媒体的老派警惕，但放在这里并不过时。以前有人为了代码行数注水，为了 Git 提交次数拆 commit。现在同一套行为可以换成 Token。区别只是这次注水更贵，因为每一次无效调用都在消耗真实算力。</p>
+<h2 id="section-4">它也不只是胡乱烧钱</h2>
+<p>说到这里，Tokenmaxxing 很容易被理解成一种很蠢的东西：老板觉得 AI 好，于是要求大家多调模型、多花钱、多制造一点「我很 AI」的痕迹。</p>
+<p>这当然是它最容易滑向的样子。但 Gary Tan 原本讲的并不是这个。</p>
+<p>他真正强调的是，不要在错误的地方省 Token。比如让 Claude 写代码之前，先生成 ASCII 图：数据流、状态机、依赖关系、决策树，全都先画出来。听起来很怪，但它的作用是逼模型先建立全局理解。</p>
+<blockquote>
+<p>一旦它把上下文全部加载进来，它做的事情就完整得多了。</p>
+</blockquote>
+<p>这和排行榜上的刷量不是一回事。前者是在买上下文，买推理前的准备动作；后者是在买一个看起来积极的数字。</p>
+<p>他说的另一个原则也很有意思：<strong>Thin Harness, Fat Skills</strong>。</p>
+<p>调度、路由、编排这些框架层的东西，交给成熟工具。真正需要投入的，是把「这件事应该怎么做」写成足够清楚的自然语言技能。很多 AI 工程失败，不是模型不够强，而是人把应该用语言描述的东西，硬写成了死板的代码。</p>
+<p>这点我很认同。做 Agent 相关东西时，最难的经常不是「调哪个模型」，而是判断边界：哪些部分应该交给 LLM，哪些部分应该交给确定性代码。这个判断，可能会变成 AI 工程师最重要的能力之一。</p>
+<p>Gary Tan 同时调度 15 个 AI 代理，48 小时合并 13 个 PR。他把 Claude Code 比成适合 ADHD CEO 的工具，速度快、响应灵；把 OpenAI Codex 比成 200 IQ、话不多、专门解决硬问题的 CTO。这个比喻有点夸张，但能看出他不是把 AI 当单一工具用，而是在组织一组性格不同的「劳动力」。</p>
+<p>他的网站 Gary&#39;s List，每篇文章生成成本大概 5-10 美元。系统会自动抓取几十篇文章、整本书、多个数据源，交叉比对后生成带引用的深度报道。</p>
+<p>如果这件事真的能稳定工作，那么 5-10 美元并不贵。它买到的是一个人类记者可能要花几周才能完成的前期资料整理。</p>
+<p>所以这套东西的问题不在于「烧 Token」本身，而在于谁来判断它烧得值不值。一个有经验的人，为了获得更完整的上下文主动多花 Token，和一个组织为了排行榜制造 Token 消耗，是两件完全不同的事。前者可能提高质量，后者只会把所有人推向表演。</p>
+<h2 id="section-5">产出真的变多了吗</h2>
+<p>五源资本的孟醒提过一个问题：很多 CTO 兴奋地说百倍工程师、十倍效率，但 100 倍的效率提升落到公司营收上，可能只体现为 50% 或 1 倍增长。中间的差距在哪？</p>
+<p>这大概是今天所有 AI Coding 叙事里最容易被跳过的问题。</p>
+<p>代码产出可以暴涨，产品价值不一定会暴涨。多写的代码不等于多创造的价值，多烧的 Token 也不等于多获得的洞察。</p>
+<p>Anthropic 自己也有一个很有意思的例子。作为 Coding Agent 做得最好的公司之一，他们内部的 oncall agent 依然不够好用。当 API 突然变慢，或者某个推理节点挂掉，AI 仍然不如人类工程师定位得快。</p>
+<blockquote>
+<p>蒸汽机已经被发明出来了，但它有时候跑得还没有马车快。</p>
+</blockquote>
+<p>发明蒸汽机的人自己还在骑马车。这画面很有意思，也很真实。</p>
+<p>?AI native 组织?听起来很先进：让每个部门梳理工作流，把能被 AI 介入的部分线上化，写成 skills。但换个角度看，这也是在让人蒸馏自己。你把经验、判断、路径全部整理成机器可复用的形式，公司就获得了你的 skill。至于以后还需不需要你本人，那是另一个问题。</p>
+<p>所以 Meta 的排行榜和裁员，在我看来并不是两条新闻。排行榜不是单纯在鼓励员工用 AI，它也是在观察哪些工作可以被工具吸收。</p>
+<h2 id="section-6">吹口哨的蒸汽机</h2>
+<p>Tokenmaxxing 有两种样子。</p>
+<p>一种是 Gary Tan 那种。你有明确目标，有判断力，有上下文管理能力，愿意用 Token 换完整性和质量。这个方向当然成立。5 天重建一个当年要 400 万美元的产品，即便有很多传播上的水分，也依然说明了一些变化。</p>
+<p>另一种是排行榜上的 Tokenmaxxing。月度排名、段位、KPI、茶歇间的谈资。到了这一步，它就不再是方法论，而是一种身份游戏。</p>
+<p>Gary Tan 自己也知道这里的危险。他问过一个问题：</p>
+<blockquote>
+<p>你能掌控自己的工具，还是你的工具会掌控你？</p>
+</blockquote>
+<p>这句话比?多烧 Token?重要得多。</p>
+<p>播客最后，他说可以向机器借时间，用机器的时间去为你在乎的人和事工作。这大概是 Tokenmaxxing 最好的版本：不是为了数字而烧 Token，而是为了买回你真正想用的时间。</p>
+<p>但从 Meta 的排行榜、亚马逊的刷量、黄仁勋那句?不花 25 万买 Token 的工程师让我抓狂?来看，行业可能没那么有耐心区分这些细节。</p>
+<p>2026 年的硅谷，蒸汽机已经发明出来了。有人拿它造火车，有人拿它吹口哨。最尴尬的是，吹口哨的人 Token 消耗量可能更高。</p>
+<p>所以问题不是?烧不烧 Token?。问题是：这些 Token 到底换回了什么？</p>
+<p>如果换回的是更快的验证、更完整的上下文、更好的判断，那它值得。如果换回的只是排行榜上的段位和?我很 AI native?的姿势，那它只是一种更昂贵的形式主义。</p>
+<p>更需要警惕的是另一件事：当工作越来越依赖公司提供的 AI 基础设施，?会用 AI?这件事可能并不真正属于个人。工具、数据、模型、工作流都在公司手里。个人只是使用接口的人。</p>
+<p>Meta 的排行榜到底是在鼓励员工使用 AI，还是在驯化员工？</p>
+<p>这可能才是 Tokenmaxxing 留下的真正问题。</p>
+<hr>
+<p><strong>参考资料：</strong></p>
+<ul>
+<li><a href="https://www.ycombinator.com/library/Pa-tokenmaxxing-how-top-builders-use-ai-to-do-the-work-of-400-engineers">Tokenmaxxing: How Top Builders Use AI To Do The Work Of 400 Engineers - YC Lightcone Podcast</a></li>
+<li><a href="https://finance.sina.cn/2026-04-27/detail-inhvxhzn7888881.d.html">全员 token-maxxing，一场没人敢停的军备竞赛 - 五源资本孟醒</a></li>
+<li><a href="https://wallstreetcn.com/articles/3771950">13年不写代码，5天花200美元重建400万美元产品——YC掌门人是怎么做到的？ - 华尔街见闻</a></li>
+<li><a href="https://www.stcn.com/article/detail/3903925.html">别让&quot;Token消耗量&quot;成为新型形式主义 - 证券时报</a></li>
+<li><a href="https://m.thepaper.cn/newsDetail_forward_32924328">Token与KPI直接挂钩，硅谷掀起排名风 - 澎湃新闻</a></li>
+<li><a href="https://www.thepaper.cn/newsDetail_forward_33057446">刷Token走火入魔，Meta员工写外挂作弊冲榜 - 新智元</a></li>
+<li><a href="https://www.donews.com/news/detail/4/6552529.html">亚马逊员工被曝刷AI token消耗量以迎合内部考核 - DoNews</a></li>
+<li><a href="https://m.blog.csdn.net/techforward/article/details/160877735">迪士尼、Meta、Uber等疯抢Claude，非程序员成使用主力军 - CSDN</a></li>
+<li><a href="https://finance.sina.cn/stock/jdts/2026-05-14/detail-inhxvpqq8844433.d.html">Token经济学：AI时代的新货币战争 - 新浪财经</a></li>
+</ul>
+
+          </div>
+        </article>
+      </div>
+    </main>
+    <script>
+      (() => {
+        const links = [...document.querySelectorAll(".article-toc a")];
+        const headings = links
+          .map((link) => document.getElementById(link.getAttribute("href").slice(1)))
+          .filter(Boolean);
+        if (!links.length || !headings.length) return;
+        const setActive = (id) => {
+          for (const link of links) {
+            link.toggleAttribute("aria-current", link.getAttribute("href") === "#" + id);
+          }
+        };
+        const observer = new IntersectionObserver(
+          (entries) => {
+            const visible = entries
+              .filter((entry) => entry.isIntersecting)
+              .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0];
+            if (visible) setActive(visible.target.id);
+          },
+          { rootMargin: "-18% 0px -68% 0px", threshold: 0 }
+        );
+        headings.forEach((heading) => observer.observe(heading));
+        setActive(headings[0].id);
+      })();
+    </script>
+  </body>
+</html>

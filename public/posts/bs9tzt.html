@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="-- 基于 Tailwind CSS 解决 CSS 工程化问题引言去年很火的 Tailwind CSS 是何方神圣，到底是 Atomic CSS 余孽的卷土重来还是真的有点东西。Tailwind CSS 如何帮助我们建立界面样式到设计语言的连接，Utility-first 的 CSS 工作流是..." />
+    <title>为自己的团队定制 CSS 框架 · 生活倒影</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;700&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../styles.css" />
+  </head>
+  <body>
+    <main class="article-shell">
+      <a class="back-link" href="../index.html">← 首页</a>
+      <div class="article-layout">
+        <aside class="article-toc" aria-label="章节目录">
+        <p>目录</p>
+        <nav>
+          <a class="toc-depth-2" href="#section-1">强制一致性</a>
+          <a class="toc-depth-2" href="#section-2">Design Token</a>
+          <a class="toc-depth-2" href="#section-3">语义化和关注点分离</a>
+          <a class="toc-depth-2" href="#section-7">内联样式</a>
+          <a class="toc-depth-2" href="#section-8">如何做</a>
+        </nav>
+      </aside>
+        <article class="article-page">
+          <header class="article-header">
+            <h1>为自己的团队定制 CSS 框架</h1>
+            <time datetime="2021-03-02">2021-03-02</time>
+          </header>
+          <div class="article-content">
+            <p style="text-align: right;">-- 基于 Tailwind CSS 解决 CSS 工程化问题</p><h1 id="qDG8L">引言</h1><p>去年很火的 Tailwind CSS 是何方神圣，到底是 Atomic CSS 余孽的卷土重来还是真的有点东西。<span>Tailwind CSS </span>如何帮助我们建立界面样式到设计语言的连接，Utility-first 的 CSS 工作流是怎样的，以及，如何基于 Tailwind CSS 为自己的团队定制一套舒服的 CSS 框架。</p><blockquote><p><span style="color: #8C8C8C;">我们太</span><span style="color: #8C8C8C;">有限了,我们只能做我们觉得是对的事情,然后接受它的事与愿违。 -- 罗翔</span></p></blockquote><p><span style="color: #8C8C8C;"><br /></span></p><h1 id="WkRtx">CSS 工程化要解决的问题</h1><p>至少在中后台研发领域，我觉得团队在 CSS 领域会遇到以下几个问题要解决：</p><ul><li>强制一致性：如何强制规约界面的字体、字号和颜色收敛。</li><li>设计关联：如何形成界面样式到设计语言的连接与对应。</li><li>语义化：关注点分离是银弹还是误解。</li><li>内联样式：在何时进行抽象。</li></ul><h2 id="section-1">强制一致性</h2><p>在解释什么是强制一致性之前，请大家来猜一下，在 yuque.com 上，有多少种不同的字号、文字颜色和背景颜色。</p><p>答案可能跟你预期的有些差异。yuque.com 上一共有 34 种不同的字号、77 种不同的文字颜色和 56 种不同的背景颜色。 <a href="https://cssstats.com/stats/?url=https://yuque.com/" target="_blank">https://cssstats.com/stats/?url=https://yuque.com/</a></p><p>事实上 yuque.com 已经做得足够好了。因为在 Github.com 上一共有 56 种字号，163 种文字颜色和 147 种背景颜色。在一些企业级的 Web 应用上其实会更可怕，例如 Gitlab 一共有 59 种字号、402 种文字颜色和 239 种背景颜色。</p><p>为什么会出现这种事情？当设计师把设计稿交给我们之后，还原设计稿的最便捷方式之一就是使用设计工具的 &quot;Copy as CSS&quot; 功能导出对应的 CSS，看起来不错。</p><div class="table-wrap"><table class="lake-table" style="width: 860px;"><colgroup><col width="500" /><col width="360" /></colgroup><tbody><tr style="height: 504px;"><td><p><figure><img src="../assets/images/bs9tzt-extra-01.png" alt="image.png" width="651" height="686" loading="lazy" /></figure></p></td><td><p>/* Lorem ipsum dolor si */</p><p>position: absolute;</p><p>width: 232px;</p><p>height: 144px;</p><p>font-family: Roboto;</p><p>font-style: normal;</p><p>font-weight: normal;</p><p>font-size: 16px;</p><p>line-height: 24px;</p><p>/* or 150% */</p><p>color: rgba(0, 0, 0, 0.541327);</p></td></tr></tbody></table></div><p>观察这段 CSS，会发现，在这里，字体、字号和颜色都是一个自由的，没有规约的值。「每一行 CSS 都是一个空白的画布，没有人能阻止你使用任何你想要的值」。这就是为什么同样是视觉设计师想要的语雀品牌绿，在 CSS 中至少有六种写法，并且以下三种我基本看不出有啥区别……</p><p style="text-align: center;"><figure><img src="../assets/images/bs9tzt-01.png" alt="image.png" width="415" height="100" loading="lazy" /></figure></p><p style="text-align: left;">所以这里所谓的 「强制一致性」指的是开发人员在书写 CSS 的过程中，属性的值应该总是从一个有限的集合中去取。而不是任意取值。</p><h2 id="section-2">Design Token</h2><p>再来。这是一份 Google Materia Design 的设计稿。会发现 Google 的设计师除了标注了这些元素的颜色值之外，还贴心的写了个名字 Gray 900。这就是所谓的 Design Token:</p><blockquote><p><span style="color: #4B4B4B;">Design tokens are all the values needed to construct and maintain a design system — spacing, color, typography, object styles, animation, etc. — represented as data. </span></p></blockquote><p><figure><img src="../assets/images/bs9tzt-02.png" alt="" width="696" height="547" loading="lazy" /></figure></p><p style="text-align: center;"><span style="color: #595959;">一份优秀的设计稿</span></p><p style="text-align: left;"><span style="color: #595959;"><br /></span></p><p style="text-align: left;">在一份设计规范中，设计师首先会决定使用一些值。然后给它们设置一个上下文无关的名字，即 Global Token 。用于让其他的 token 引用。</p><p style="text-align: left;">在此之上，在特定的上下文和抽象中，会基于 Global Token 生成一个具名的 Alias Token，用于传达 Global Token 的设计预期。</p><p style="text-align: left;">最后，决定某个组件要使用某个特定 Design Token 时，会创建一个 Component-specific Token，让开发人员能给予 Alias Token 去定义组件的 Token 别名。</p><p style="text-align: center;"><figure><img src="../assets/images/bs9tzt-03.png" alt="" width="344" height="360" loading="lazy" /></figure></p><p style="text-align: center;"><span style="color: #595959;">从色值到组件</span></p><p style="text-align: left;">下面来个例子。</p><div class="table-wrap"><table class="lake-table" style="width: 751px;"><colgroup><col width="150" span="1" /><col width="325" span="1" /><col width="276" span="1" /></colgroup><tbody><tr style="height: 33px;"><td rowspan="1" style="vertical-align: top; background-color: #FFFFFF; color: #262626;"><p>普通开发</p></td><td><p>// css</p><p>button {</p><p>  background: #2680EB;</p><p>}</p></td><td><p>裸写色值。无法做到强制一致性</p></td></tr><tr style="height: 33px;"><td rowspan="1" style="vertical-align: top; background-color: #FFFFFF; color: #262626;"><p>文艺开发</p></td><td colspan="1" style="vertical-align: top; background-color: #FFFFFF; color: #262626;"><p>// css</p><p>:root {</p><p>  --blue400: #<span>2680EB；</span></p><p>  --ctaBackgroundColor: var(--blue400)<span>;</span></p><p>}</p><p>button {</p><p>  background: var(--<span>ctaBackgroundColor</span>);</p><p>}</p></td><td colspan="1" style="vertical-align: top; background-color: #FFFFFF; color: #262626;"><p>通过 css variable 把 Design Token 代码化。</p><p>使用的时候引用。不要裸写色值。</p><p>这里并没有再创建一遍 Component-specific Token</p></td></tr><tr style="height: 33px;"><td colspan="1" style="vertical-align: top; background-color: #FFFFFF; color: #262626;"><p>二逼开发</p></td><td colspan="1" style="vertical-align: top; background-color: #FFFFFF; color: #262626;"><p>// tailwind.config.js</p><p>{</p><p>  theme: {</p><p>    extend: {</p><p>      colors: {</p><p>        blue: {</p><p>          400: '#2680EB'</p><p>        }</p><p>      }</p><p>    }</p><p>  }</p><p>}</p><p>// css</p><p>@layer components {</p><p>    .cta-background-color {</p><p>       @apply bg-blue-400;</p><p>    }</p><p>    .button-cta-background-color {</p><p>        @extend .cta-background-color;</p><p>    }</p><p>}</p><p>// html</p><p>&lt;button class=&quot;<span>cta-background-color</span>&quot;&gt;</p><p>  Click Me</p><p>&lt;/button&gt;</p></td><td colspan="1" style="vertical-align: top; background-color: #FFFFFF; color: #262626;"><p>通过 tailwind.config.js 把 Design Token 与值做关注点分离</p><p>通过 tailwind 的 layer directive 把 Design Token 与 Alias token 做连接</p><p>创建出 Component-specific Token，通过类名暴露给 HTML 组件使用</p></td></tr></tbody></table></div><h2 id="section-3">语义化和关注点分离</h2><p style="text-align: center;"><figure><img src="../assets/images/bs9tzt-04.png" alt="image.png" width="607" height="262" loading="lazy" /></figure></p><p>看到这里可能有小伙伴开始懵逼了，是不是有哪里搞错了，不是说好了 Tailwind CSS 就是当初被喷成狗的 Atomic CSS 换了个皮卷土重来么，怎么跟你上面讲的不太一样？甚至官网上的示例都是这样一串 class，是不是你在过度解读 Tailwind CSS，夹带了私货？</p><p>前面已经讨论了如何把样式和设计通过 Design Token 连接起来。但接下来可能要讨论一些比较奇怪的东西。</p><p style="text-align: center;"><figure><img src="../assets/images/bs9tzt-05.png" alt="image.png" width="366" height="431" loading="lazy" /></figure></p><p style="text-align: left;">用雨燕首页的 「最近常访问的应用」 列表为例。按照古典时代「关注点分离」的最佳实践，也就是传说中的 「写 HTML 的时候不用关心样式」，我们会怎么写这样的列表：</p><p class="unsupported-card">此处原文包含 thirdparty 内容。</p><p style="text-align: left;">现在谁这么写 CSS 绝对会被揍死。它最大的坏处是 HTML 和 CSS 的层次结构必须完全对应。HTML 怎么嵌套的， CSS 就必须怎么嵌套。</p><p>后来我们开始有了 BEM，写出来的 HTML 会不那么欠揍了：</p><p class="unsupported-card">此处原文包含 thirdparty 内容。</p><p>现在看起来舒服多了。但是问题来了。如何复用？</p><p>例如现在需要写一个结构非常类似的列表，例如雨燕首页的进行中的迭代的列表，希望最大限度复用上面这个结构。一种不纠结的做法是拷一遍。另一种做法是使用注入 less / sass 的 mixin 或者 extends 功能复用样式。</p><h3 id="section-4">复用：使用 mixin 或者 extends</h3><p class="unsupported-card">此处原文包含 thirdparty 内容。</p><h3 id="section-5">复用：创建内容无关样式</h3><p>另一种方案是创建一个内容无关的 CSS，由 application 和 sprint 两个实体列表共同使用。<span>如果需要只修改 sprint 列表中的样式，又不想影响到其他 entiry-list，就需要</span><span>语义化的增加一个 class，然后通过这个新的语义化 class 来覆盖样式。</span></p><p class="unsupported-card">此处原文包含 thirdparty 内容。</p><h3 id="section-6">这只是一个选择……</h3><ul><li>要么保持关注度分离，在写 HTML 的时候（尽量）不关心 CSS，使用 mixin 和 extends 做复用。</li><li>要么开始尝试创建内容无关的样式，并以可复用的方式命名所有内容，这就是 Tailwind CSS 作者的理念。</li></ul><h2 id="section-7">内联样式</h2><pre><code class="language-jsx">if (status === 'FAIL') {
+  return &lt;CloseCircleFilled style={{ color: '#F5222D', fontSize: 16, float: 'right' }} /&gt;;
+}</code></pre><p>不知道大家怎么看这样的代码。这是一个 Icon，在这个场景下我们需要去给它设置颜色和字号。这样写内联样式总觉得很奇怪，其实也合理。因为如果我们真的为了这个场景去创建个样式出来，就真的太奇怪了。并且会带来额外的起名负担。还会担心重名（于是我们又引入了 css module），所以很可能你会写出来这样一个 class：</p><pre><code class="language-jsx">// JSX:
+if (status === 'FAIL') {
+  return &lt;CloseCircleFilled className=&quot;redCloseIconRight&quot; /&gt;;
+}
+
+// CSS
+.redCloseIconAlignRight {
+	color: #F5222D;
+  fontSize: 16px;
+  float: right;
+}</code></pre><p>内联样式会带来两个问题：</p><ul><li>无法做到强制一致性。除非你要在内联样式里写 CSS Variable，否则没办法保证样式值的收敛。</li><li>过于复杂的内联样式很恶心，例如 box-shadow、font-family。很容易又转回到创建一个局部 class 的情形。</li></ul><p>在这两种情况下，为一些常用的样式设定 Utility Classes 其实非常方便。 <code>.clearfix</code>  就是特别典型的例子。 Tailwind CSS 的另一个爽点就在这里。通过配置，可以创建出链接到 Design Token 的 <span>Utility Classes。不管在 css 里通过 apply 复用，还是直接在 jsx 里用，都非常方便：</span></p><p><span><br /></span></p><pre><code class="language-jsx">// JSX:
+if (status === 'FAIL') {
+  return &lt;CloseCircleFilled className=&quot;text-red-500 text-base&quot; /&gt;;
+}
+
+// 加个 shadow 也很方便：
+if (status === 'FAIL') {
+  return &lt;CloseCircleFilled className=&quot;text-red-500 text-base shadow-sm&quot; /&gt;;
+}</code></pre><h1 id="hPiXC">正式介绍一下 Tailwind CSS</h1><p>写到这里终于可以正式介绍一下 Tailwind CSS 了。</p><p>Q: Tailwind CSS 是 Atomic CSS 吗？</p><p>A: 不是。它是一个 Utility First 的 CSS 框架。提供了对提升 CSS 开发效率的一系列 Utility Class 的抽象，以及自定义 Utility Class 的方法。</p><p>Q: 然后呢</p><p>A: 以 tailwind.config.js 为桥梁，建立起属于自己团队的从 Design System 到 CSS 框架的连接。</p><p>Q: 那如何低成本解决原先有个 class 叫 <code>.black</code> ，然后很多组件都用了，但是突然有需求要把他们改成 <code>蓝色</code> 的问题</p><p>A: 按照上面 Design Token 的做法，做 <code>component-layer</code> 封装即可。</p><h2 id="section-8">如何做</h2><p>以一个内部的中台项目为例子：</p><h3 id="section-9">1. 在 tailwind.config.js 中定义 Design Token</h3><pre><code class="language-javascript">module.exports = {
+  darkMode: false, // or 'media' or 'class'
+  purge: [
+    './src/**/*.{js,jsx,ts,tsx}'
+  ],
+  theme: {
+    extend: {
+      fontFamily: {
+        mono: [ 'Menlo', 'Consolas', 'monaco', 'monospace' ],
+      },
+      fontSize: {
+        xs: '12px',
+        sm: '14px',
+        base: '16px',
+        lg: '20px',
+        xl: '24px',
+      },
+      fontWeight: {
+        light: 300,
+        normal: 400,
+        medium: 500,
+      },
+      colors: {
+        primary: '#1890ff',
+        info: '#2c92f6',
+        warn: '#ffbf00',
+        success: '#00a854',
+        fail: '#f04134',
+        doing: '#697b8c',
+        pause: '#a3b1bf',
+        enable: '#52c41a',
+        disable: '#f5222d',
+        danger: '#f04135',
+        icon: {
+          0: '#f04134',
+          1: '#00a854',
+          2: '#108ee9',
+          3: '#f5317f',
+          4: '#f56a00',
+          5: '#7265e6',
+          6: '#ffbf00',
+          7: '#00a2ae',
+        }
+      },
+      boxShadow: {
+        DEFAULT: '0px 4px 4px rgba(0, 55, 107, 0.04)',
+      },
+    },
+  },
+  variants: {
+    extend: {},
+  },
+  plugins: [],
+}</code></pre><h3 id="section-10">2. 把原先 less 中散落的各种 Design Token 使用 apply 描述。</h3><pre><code class="language-less"> .panel-body {
+    flex: 1;
+    background: @background-color-content;
+    border-radius: @border-radius-default;
+    box-shadow: @shadow-default;
+    overflow: hidden;
+ }
+
+
+改成
+
+ @layer components {
+    .panel-background {
+       @apply gb-white;
+    }
+}
+
+ .panel-body {
+    .panel-background;
+    @apply flex-1 rounded shadow;
+    overflow: hidden;
+ }
+</code></pre><pre><code class="language-less">// 竹尔：app 默认图标，用 https://ant.design/docs/spec/colors-cn 第 6 组颜色
+@icon-color-0: #f04134;
+@icon-color-1: #00a854;
+@icon-color-2: #108ee9;
+@icon-color-3: #f5317f;
+@icon-color-4: #f56a00;
+@icon-color-5: #7265e6;
+@icon-color-6: #ffbf00;
+@icon-color-7: #00a2ae;
+
+.icon-product {
+  width: 32px;
+  height: 32px;
+  display: inline-block;
+  border-radius: 32px;
+  text-align: center;
+  color: #fff;
+
+  &amp;.icon-color {
+    &amp;-0 {
+      background: @icon-color-0;
+    }
+    &amp;-1 {
+      background: @icon-color-1;
+    }
+    &amp;-2 {
+      background: @icon-color-2;
+    }
+    &amp;-3 {
+      background: @icon-color-3;
+    }
+    &amp;-4 {
+      background: @icon-color-4;
+    }
+    &amp;-5 {
+      background: @icon-color-5;
+    }
+    &amp;-6 {
+      background: @icon-color-6;
+    }
+    &amp;-7 {
+      background: @icon-color-7;
+    }
+  }
+}
+
+// 改成
+.icon-product {
+  @apply w-8 h-8 rounded-lg text-white text-centetr inline-block;
+}
+
+</code></pre><h3 id="section-11">3. 去除无用抽象。把内联样式改写成 Utility Class</h3><pre><code class="language-jsx">&lt;div style={{ width: 120, marginLeft: 16, marginRight: 12 }}&gt;
+  &lt;Progress percent={progress} format={percent =&gt; `${percent}%`} /&gt;
+&lt;/div&gt;
+
+&lt;Avatar className={`icon-product icon-color-${colorIndex}`}&gt;
+  {iconLetter}
+&lt;/Avatar&gt;
+
+// 改成
+
+&lt;div className=&quot;w-28 ml-4 mr-3&quot;&gt;
+  &lt;Progress percent={progress} format={percent =&gt; `${percent}%`} /&gt;
+&lt;/div&gt;
+
+&lt;Avatar className={`icon-product bg-color-${colorIndex}`}&gt;
+  {iconLetter}
+&lt;/Avatar&gt;
+</code></pre><h1 id="Tr6Em">多余的话</h1><p>在 2021 年的当下，一个前端工程师在工作中，花在 JavaScript、CSS 和 Html 的上的时间占比大概跟前面的排序一样。JavaScript &gt; CSS &gt;&gt;&gt; Html。早年间前端工程师可能还会通过模板关注到 Html 的结构，而现在，随着 React 接管了 DOM，前端工程师的关注点已经慢慢从 HTML 移动到了 JSX 上。</p><p style="text-align: left;">甚至在整个生产过程也跟古典的「写语义化的 HTML -&gt; 给他们取个 Class -&gt; 写选择器 -&gt; 写 CSS 」 不同了。工程师总是尝试优先使用已经写好的组件（如果没有就写一个），然后组合搭建出整个界面。甚至在布局的时候都很少关注 HTML：比如 antd 已经提供了 Layout 布局组件，又比如 Material Design 整个布局都是基于 Responsive Layout 的，基本上没有考虑有关 HTML 文档流的什么事情。</p><p style="text-align: left;">在 React 刚出来的时候，有很大一部分前端工程师表示 JSX 这种把逻辑和模板混在一起写的方式就是倒退。但随着 Flutter 和 Swift UI 的流行，大家惊奇的发现整个业界都在「倒退」。</p><p style="text-align: left;">所以也许我们可以换个想法，把 HTML 和 CSS 当成 UI 框架输出的结果。在书写代码的过程中，它们是什么样子的，可能并没有那么重要。</p><pre><code class="language-swift">struct ContentView: View {
+    var body: some View {
+        VStack {
+            Text(&quot;Turtle Rock&quot;)
+                .font(.title)
+            Text(&quot;Joshua Tree National Park&quot;)
+                .font(.subheadline)
+        }
+    }
+}</code></pre><pre><code class="language-rust">@override
+Widget build(BuildContext context) {
+    return GestureDetector(
+        onTap: () {
+            controller
+            ..reset()
+            ..forward();
+        },
+        child: RotationTransition(
+            turns: animation,
+            child: Stack(
+                children: [
+                    Positioned.fill(
+                        child: FlutterLogo(),
+                    ),
+                    Center(
+                        child: Text(
+                            'Click me!',
+                            style: TextStyle(
+                                fontSize: 60.0,
+                                fontWeight: FontWeight.bold,
+                            ),
+                        ),
+                    ),
+                ],
+            ),
+        ),
+    );</code></pre><h1 id="nJEgC">引用</h1><p><a href="https://spectrum.adobe.com/page/design-tokens/" target="_blank">https://spectrum.adobe.com/page/design-tokens/</a></p><p><a href="https://adamwathan.me/css-utility-classes-and-separation-of-concerns/" target="_blank">https://adamwathan.me/css-utility-classes-and-separation-of-concerns/</a></p><p><a href="https://css-tricks.com/bem-101/" target="_blank">https://css-tricks.com/bem-101/</a></p><p><br /><cursor /></p>
+          </div>
+        </article>
+      </div>
+    </main>
+    <script>
+      (() => {
+        const links = [...document.querySelectorAll(".article-toc a")];
+        const headings = links
+          .map((link) => document.getElementById(link.getAttribute("href").slice(1)))
+          .filter(Boolean);
+        if (!links.length || !headings.length) return;
+        const setActive = (id) => {
+          for (const link of links) {
+            link.toggleAttribute("aria-current", link.getAttribute("href") === "#" + id);
+          }
+        };
+        const observer = new IntersectionObserver(
+          (entries) => {
+            const visible = entries
+              .filter((entry) => entry.isIntersecting)
+              .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0];
+            if (visible) setActive(visible.target.id);
+          },
+          { rootMargin: "-18% 0px -68% 0px", threshold: 0 }
+        );
+        headings.forEach((heading) => observer.observe(heading));
+        setActive(headings[0].id);
+      })();
+    </script>
+  </body>
+</html>

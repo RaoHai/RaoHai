@@ -1,0 +1,17 @@
+{
+  "name": "viberules-dev-homepage",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "npx serve public",
+    "import:yuque": "node scripts/import-yuque.mjs",
+    "deploy": "npx wrangler pages deploy public --project-name cloud-edgetunnel-raohai --commit-dirty=true"
+  },
+  "devDependencies": {
+    "serve": "^14.2.5",
+    "wrangler": "^4.118.0"
+  },
+  "dependencies": {
+    "marked": "^18.0.7"
+  }
+}
