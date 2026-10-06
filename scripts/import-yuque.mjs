@@ -557,7 +557,6 @@ function linksPage() {
   const groups = [
     { title: "Other Channels", links: [
       { name: "GitHub", url: "https://github.com/RaoHai", label: "github.com/RaoHai" },
-      { name: "语雀", url: "https://www.yuque.com/luchen/buzhou", label: "yuque.com/luchen/buzhou" },
     ] },
     { title: "Friends", links: [
       { name: "cafe3310", url: "https://cafe3310.github.io/chocho-miemie-album/", label: "chocho-miemie gallery" },
