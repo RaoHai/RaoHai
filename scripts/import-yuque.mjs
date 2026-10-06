@@ -40,13 +40,6 @@ const posts = [
     manualFile: "content/mid-system-vs-system-reminder.md",
   },
   {
-    slug: "strong-planner-weak-executor",
-    title: "强模型负责规划、弱模型负责执行，是伪命题吗？",
-    created_at: "2026-07-28T00:00:00.000Z",
-    fallback: "作为普遍规律，它是伪命题；作为有前提的成本优化策略，它成立。",
-    manualFile: "content/strong-planner-weak-executor.md",
-  },
-  {
     slug: "ag-ui-live-share-2025",
     title: "A Quick Exploration of AG-UI",
     created_at: "2025-07-04T00:00:00.000Z",
@@ -430,7 +423,7 @@ function layout({ title, description, date, body }) {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="${escapeHtml(description || title)}" />
     <title>${escapeHtml(title)} · 生活倒影</title>
-    <link rel="stylesheet" href="../styles.css?v=20261006-reading" />
+    <link rel="stylesheet" href="../styles.css?v=20261006-links" />
   </head>
   <body>
     <main class="article-shell">
@@ -503,6 +496,7 @@ function siteNav(active = "blog") {
         <a class="site-mark" href="./index.html">生活倒影</a>
         <div>
           <a ${active === "blog" ? 'aria-current="page"' : ""} href="./index.html">Blog</a>
+          <a ${active === "links" ? 'aria-current="page"' : ""} href="./links.html">Links</a>
           <a ${active === "about" ? 'aria-current="page"' : ""} href="./about.html">About</a>
         </div>
       </nav>`;
@@ -530,7 +524,7 @@ function indexPage(items) {
       content="生活倒影。关于工程、AI、Web、工作方法与日常观察的文字记录。"
     />
     <title>生活倒影</title>
-    <link rel="stylesheet" href="./styles.css?v=20261006-reading" />
+    <link rel="stylesheet" href="./styles.css?v=20261006-links" />
   </head>
   <body>
     <main id="top" class="page-shell">
@@ -559,6 +553,50 @@ function indexPage(items) {
 `);
 }
 
+function linksPage() {
+  const groups = [
+    { title: "Other Channels", links: [
+      { name: "GitHub", url: "https://github.com/RaoHai", label: "github.com/RaoHai" },
+      { name: "语雀", url: "https://www.yuque.com/luchen/buzhou", label: "yuque.com/luchen/buzhou" },
+    ] },
+    { title: "Friends", links: [
+      { name: "cafe3310", url: "https://cafe3310.github.io/chocho-miemie-album/", label: "chocho-miemie gallery" },
+      { name: "Chiyolyn", url: "https://chiyolyn.github.io/", label: "chiyolyn.github.io" },
+      { name: "Yiyi", url: "https://yiyi-l2d.vercel.app/", label: "yiyi-l2d.vercel.app" },
+    ] },
+  ];
+  return normalizeChineseQuotes(`<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="生活倒影的其他频道与朋友们的网站。" />
+    <title>Links · 生活倒影</title>
+    <link rel="stylesheet" href="./styles.css?v=20261006-links" />
+  </head>
+  <body>
+    <main class="page-shell links-page">
+      ${siteNav("links")}
+      <header class="links-header"><h1>Links</h1></header>
+      ${groups.map((group, index) => `<section class="links-section" aria-labelledby="links-group-${index}">
+        <h2 id="links-group-${index}">${escapeHtml(group.title)}</h2>
+        <ul class="link-list">
+          ${group.links.map((link) => `<li><a href="${escapeHtml(link.url)}">
+            <span class="link-name">${escapeHtml(link.name)}</span>
+            <span class="link-address">${escapeHtml(link.label)}</span>
+            <span class="link-arrow" aria-hidden="true">↗</span>
+          </a></li>`).join("\n")}
+        </ul>
+      </section>`).join("\n")}
+    </main>
+    <footer class="site-footer">
+      <span>© 2026 生活倒影</span>
+      <span>-半山腰上的人  他还好吗</span>
+    </footer>
+  </body>
+</html>`);
+}
+
 function aboutPage() {
   return normalizeChineseQuotes(`<!doctype html>
 <html lang="zh-CN">
@@ -570,7 +608,7 @@ function aboutPage() {
       content="Rao Hai 的个人介绍、论文、社区参与、公开分享与最新文章。"
     />
     <title>About · 生活倒影</title>
-    <link rel="stylesheet" href="./styles.css?v=20261006-reading" />
+    <link rel="stylesheet" href="./styles.css?v=20261006-links" />
   </head>
   <body>
     <main class="page-shell about-page">
@@ -643,6 +681,11 @@ function aboutPage() {
 `);
 }
 
+if (process.argv.includes("--links-only")) {
+  await fs.writeFile(path.join(publicDir, "links.html"), linksPage(), "utf8");
+  process.exit(0);
+}
+
 await fs.mkdir(postsDir, { recursive: true });
 await fs.mkdir(imagesDir, { recursive: true });
 
@@ -682,3 +725,4 @@ for (const post of posts) {
 
 await fs.writeFile(path.join(publicDir, "index.html"), indexPage(items), "utf8");
 await fs.writeFile(path.join(publicDir, "about.html"), aboutPage(), "utf8");
+await fs.writeFile(path.join(publicDir, "links.html"), linksPage(), "utf8");
