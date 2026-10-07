@@ -75,6 +75,8 @@
   --accent-2: #6b7280;
   --max: 820px;
   --article: 720px;
+  --toc-width: 196px;
+  --toc-gap: 48px;
   --serif: "New Computer Modern", "HuiWen", "Songti SC", "STSong", "SimSun", serif;
   --sans: "New Computer Modern Sans", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue",
     Helvetica, Arial, sans-serif, "Segoe UI";
@@ -498,9 +500,9 @@ h1 {
   font-family: var(--sans);
   position: fixed;
   top: 92px;
-  left: max(18px, calc((100vw - var(--article)) / 2 - 244px));
+  left: max(18px, calc((100vw - var(--article)) / 2 - var(--toc-width) - var(--toc-gap)));
   z-index: 10;
-  width: 196px;
+  width: var(--toc-width);
   max-height: calc(100vh - 112px);
   padding-right: 10px;
   overflow: auto;
@@ -546,7 +548,7 @@ h1 {
 .back-link {
   position: fixed;
   top: 22px;
-  left: max(18px, calc((100vw - var(--article)) / 2 - 108px));
+  left: max(18px, calc((100vw - var(--article)) / 2 - var(--toc-width) - var(--toc-gap)));
   z-index: 20;
   display: inline-flex;
   align-items: center;
@@ -571,7 +573,7 @@ h1 {
 }
 
 .article-header h1 {
-  max-width: 760px;
+  max-width: 100%;
   font-size: 30px;
   line-height: 1.55;
 }
@@ -769,6 +771,46 @@ h1 {
   margin-top: 56px;
   padding-top: 18px;
   border-top: 1px solid var(--line);
+}
+
+@media (min-width: 1500px) {
+  :root {
+    --max: 1000px;
+    --article: 860px;
+    --toc-width: 220px;
+    --toc-gap: 52px;
+  }
+
+  .intro {
+    max-width: none;
+  }
+
+  .note-list p,
+  .about-hero > p:not(.about-kicker):not(.about-contact) {
+    max-width: 780px;
+  }
+
+  .article-toc {
+    font-size: 13px;
+  }
+}
+
+@media (min-width: 2200px) {
+  :root {
+    --max: 1200px;
+    --article: 1100px;
+    --toc-width: 260px;
+    --toc-gap: 64px;
+  }
+
+  .note-list p,
+  .about-hero > p:not(.about-kicker):not(.about-contact) {
+    max-width: 900px;
+  }
+
+  .article-toc {
+    font-size: 14px;
+  }
 }
 
 @media (max-width: 1180px) {
