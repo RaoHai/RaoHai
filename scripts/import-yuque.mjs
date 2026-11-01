@@ -12,6 +12,13 @@ const bookId = 485843;
 
 const posts = [
   {
+    slug: "dsh-superagent-pi-durable",
+    title: "让 Agent 持续工作：dsh-superagent 与 pi-durable 的交集和分工",
+    created_at: "2026-11-01T00:00:00+08:00",
+    fallback: "从 dsh-superagent 的主动式编码工作流出发，梳理它与 pi-durable 在持久化、任务连续性上的交集，以及两者可能的结合方式。",
+    manualFile: "content/dsh-superagent-pi-durable.md",
+  },
+  {
     slug: "meta-harness-agent-self-composition",
     title: "DeepSeek Harness：从自反到元 Harness",
     created_at: "2026-08-15T00:00:00+08:00",
