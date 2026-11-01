@@ -13,9 +13,10 @@ const bookId = 485843;
 const posts = [
   {
     slug: "dsh-superagent-pi-durable",
-    title: "让 Agent 持续工作：dsh-superagent 与 pi-durable 的交集和分工",
+    title: "讓 Agent 持續工作：dsh-superagent 與 pi-durable 的交集與分工",
     created_at: "2026-11-01T00:00:00+08:00",
-    fallback: "从 dsh-superagent 的主动式编码工作流出发，梳理它与 pi-durable 在持久化、任务连续性上的交集，以及两者可能的结合方式。",
+    fallback: "從 dsh-superagent 的主動式編碼工作流程出發，梳理它與 pi-durable 在持久化、任務連續性上的交集，以及兩者可能的結合方式。",
+    language: "zh-Hant",
     manualFile: "content/dsh-superagent-pi-durable.md",
   },
   {
@@ -282,7 +283,7 @@ function plainTextFromHtml(html = "") {
     .trim();
 }
 
-function withArticleToc(html = "") {
+function withArticleToc(html = "", { directoryLabel = "目录", ariaLabel = "章节目录" } = {}) {
   const headings = [];
   let index = 0;
   const body = html.replace(/<h([23])([^>]*)>([\s\S]*?)<\/h\1>/gi, (match, level, attrs, inner) => {
@@ -301,8 +302,8 @@ function withArticleToc(html = "") {
     return { body, toc: "" };
   }
 
-  const toc = `<aside class="article-toc" aria-label="章节目录">
-        <p>目录</p>
+  const toc = `<aside class="article-toc" aria-label="${ariaLabel}">
+        <p>${directoryLabel}</p>
         <nav>
           ${tocHeadings
             .map(
@@ -393,8 +394,12 @@ async function localizePlainImages(post, html = "") {
   return normalizeChineseQuotes(result);
 }
 
-function layout({ title, description, date, body }) {
-  const article = withArticleToc(body);
+function layout({ title, description, date, body, language = "zh-CN" }) {
+  const isTraditional = language === "zh-Hant";
+  const article = withArticleToc(body, {
+    directoryLabel: isTraditional ? "目錄" : "目录",
+    ariaLabel: isTraditional ? "章節目錄" : "章节目录",
+  });
   const tocScript = article.toc
     ? `<script>
       (() => {
@@ -424,7 +429,7 @@ function layout({ title, description, date, body }) {
     : "";
 
   return normalizeChineseQuotes(`<!doctype html>
-<html lang="zh-CN">
+<html lang="${language}">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -434,7 +439,7 @@ function layout({ title, description, date, body }) {
   </head>
   <body>
     <main class="article-shell">
-      <a class="back-link" href="../index.html">← 首页</a>
+      <a class="back-link" href="../index.html">← ${isTraditional ? "首頁" : "首页"}</a>
       <div class="article-layout">
         ${article.toc}
         <article class="article-page">
@@ -502,9 +507,9 @@ function siteNav(active = "blog") {
   return `<nav class="site-nav" aria-label="主导航">
         <a class="site-mark" href="./index.html">生活倒影</a>
         <div>
-          <a ${active === "blog" ? 'aria-current="page"' : ""} href="./index.html">Blog</a>
-          <a ${active === "links" ? 'aria-current="page"' : ""} href="./links.html">Links</a>
-          <a ${active === "about" ? 'aria-current="page"' : ""} href="./about.html">About</a>
+          <a${active === "blog" ? ' aria-current="page"' : ""} href="./index.html">Blog</a>
+          <a${active === "links" ? ' aria-current="page"' : ""} href="./links.html">Links</a>
+          <a${active === "about" ? ' aria-current="page"' : ""} href="./about.html">About</a>
         </div>
       </nav>`;
 }
@@ -722,6 +727,7 @@ for (const post of posts) {
       description: summaryFor(doc, post),
       date,
       body,
+      language: post.language || "zh-CN",
     }),
     "utf8",
   );
