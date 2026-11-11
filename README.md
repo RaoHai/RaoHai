@@ -32,6 +32,6 @@ Font subsetting requires Python with `fonttools` and `brotli`; see `fonts/README
 npm run deploy
 ```
 
-Deploys `public/` to the existing Cloudflare Pages project `cloud-edgetunnel-raohai`.
+Deploys `public/` to the Cloudflare Pages project `viberules-recovery` (the project bound to `viberules.dev`).
 Authenticate with Wrangler or supply `CLOUDFLARE_API_TOKEN` through the environment.
 Pushing this branch does not automatically deploy the site.

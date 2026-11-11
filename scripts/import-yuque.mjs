@@ -12,6 +12,13 @@ const bookId = 485843;
 
 const posts = [
   {
+    slug: "personal-agent-foretold",
+    title: "一桩事先张扬的委托：Personal Agent 背后的需求、资本与能力沉淀",
+    created_at: "2026-11-09T00:00:00+08:00",
+    fallback: "从 Working Agent 到 Personal Agent，讨论细分场景如何拓展用户、建立委托习惯，并将真实需求、执行反馈和能力带回通用 Agent。",
+    manualFile: "content/personal-agent-foretold.md",
+  },
+  {
     slug: "dsh-superagent-pi-durable",
     title: "讓 Agent 持續工作：dsh-superagent 與 pi-durable 的交集與分工",
     created_at: "2026-11-01T00:00:00+08:00",
