@@ -1,0 +1,30 @@
+public/posts/personal-agent-foretold.html
+  s_a505bb30b45c86::t_4c8373f5a85532 1-206
+public/index.html
+  s_a505bb30b45c86::t_4c8373f5a85532 34-37
+  s_a505bb30b45c86::t_3bbea62a2c0664 33
+README.md
+  s_a505bb30b45c86::t_51915b15f358e2 35
+content/personal-agent-foretold.md
+  s_a505bb30b45c86::t_dd732918e284c8 1-236
+package.json
+  s_a505bb30b45c86::t_d06a160488776d 9
+scripts/import-yuque.mjs
+  s_a505bb30b45c86::t_4edbb21ae19928 14-20
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "7700a5cd6a68ca7969e78ffe97c39dec10a2e65d",
+  "prompts": {},
+  "sessions": {
+    "s_a505bb30b45c86": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1be80-4b30-7803-a95f-d3ca043bc8d4",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "raohai <surgesoft@gmail.com>"
+    }
+  }
+}
