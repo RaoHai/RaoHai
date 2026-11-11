@@ -401,7 +401,33 @@ async function localizePlainImages(post, html = "") {
   return normalizeChineseQuotes(result);
 }
 
-function layout({ title, description, date, body, language = "zh-CN" }) {
+function socialMetadata({ title, description, slug, body, language }) {
+  const canonical = new URL(`/posts/${slug}`, "https://viberules.dev").href;
+  const firstImage = body.match(/<img\b[^>]*\bsrc="([^"]+)"[^>]*>/i);
+  const image = firstImage ? new URL(firstImage[1], canonical).href : "";
+  const imageAlt = firstImage?.[0].match(/\balt="([^"]*)"/i)?.[1] || title;
+  const tags = [
+    `<link rel="canonical" href="${escapeHtml(canonical)}" />`,
+    `<meta property="og:type" content="article" />`,
+    `<meta property="og:site_name" content="生活倒影" />`,
+    `<meta property="og:url" content="${escapeHtml(canonical)}" />`,
+    `<meta property="og:title" content="${escapeHtml(title)}" />`,
+    `<meta property="og:description" content="${escapeHtml(description || title)}" />`,
+    `<meta property="og:locale" content="${language === "zh-Hant" ? "zh_TW" : "zh_CN"}" />`,
+    `<meta name="twitter:card" content="${image ? "summary_large_image" : "summary"}" />`,
+    `<meta name="twitter:title" content="${escapeHtml(title)}" />`,
+    `<meta name="twitter:description" content="${escapeHtml(description || title)}" />`,
+  ];
+  if (image) tags.push(
+    `<meta property="og:image" content="${escapeHtml(image)}" />`,
+    `<meta property="og:image:alt" content="${escapeHtml(imageAlt)}" />`,
+    `<meta name="twitter:image" content="${escapeHtml(image)}" />`,
+    `<meta name="twitter:image:alt" content="${escapeHtml(imageAlt)}" />`,
+  );
+  return tags.join("\n    ");
+}
+
+function layout({ title, description, date, body, slug, language = "zh-CN" }) {
   const isTraditional = language === "zh-Hant";
   const article = withArticleToc(body, {
     directoryLabel: isTraditional ? "目錄" : "目录",
@@ -441,6 +467,7 @@ function layout({ title, description, date, body, language = "zh-CN" }) {
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="${escapeHtml(description || title)}" />
+    ${socialMetadata({ title, description, slug, body, language })}
     <title>${escapeHtml(title)} · 生活倒影</title>
     <link rel="stylesheet" href="../styles.css?v=20261007-wide" />
   </head>
@@ -734,6 +761,7 @@ for (const post of posts) {
       description: summaryFor(doc, post),
       date,
       body,
+      slug: post.slug,
       language: post.language || "zh-CN",
     }),
     "utf8",
