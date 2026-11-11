@@ -469,7 +469,7 @@ function layout({ title, description, date, body, slug, language = "zh-CN" }) {
     <meta name="description" content="${escapeHtml(description || title)}" />
     ${socialMetadata({ title, description, slug, body, language })}
     <title>${escapeHtml(title)} · 生活倒影</title>
-    <link rel="stylesheet" href="../styles.css?v=20261007-wide" />
+    <link rel="stylesheet" href="../styles.css?v=20261111-desktop-fonts" />
   </head>
   <body>
     <main class="article-shell">
@@ -570,7 +570,7 @@ function indexPage(items) {
       content="生活倒影。关于工程、AI、Web、工作方法与日常观察的文字记录。"
     />
     <title>生活倒影</title>
-    <link rel="stylesheet" href="./styles.css?v=20261007-wide" />
+    <link rel="stylesheet" href="./styles.css?v=20261111-desktop-fonts" />
   </head>
   <body>
     <main id="top" class="page-shell">
@@ -617,7 +617,7 @@ function linksPage() {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="生活倒影的其他频道与朋友们的网站。" />
     <title>Links · 生活倒影</title>
-    <link rel="stylesheet" href="./styles.css?v=20261007-wide" />
+    <link rel="stylesheet" href="./styles.css?v=20261111-desktop-fonts" />
   </head>
   <body>
     <main class="page-shell links-page">
@@ -653,7 +653,7 @@ function aboutPage() {
       content="Rao Hai 的个人介绍、论文、社区参与、公开分享与最新文章。"
     />
     <title>About · 生活倒影</title>
-    <link rel="stylesheet" href="./styles.css?v=20261007-wide" />
+    <link rel="stylesheet" href="./styles.css?v=20261111-desktop-fonts" />
   </head>
   <body>
     <main class="page-shell about-page">

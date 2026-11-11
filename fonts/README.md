@@ -15,3 +15,5 @@ npm run fonts
 ```
 
 Set `PYTHON` if the Python interpreter has a different command or path.
+
+Desktop viewports (721px and wider) use native system sans-serif and monospace stacks. The custom typefaces remain available for the mobile layout.
