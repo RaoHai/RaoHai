@@ -1,0 +1,69 @@
+fonts/README.md
+  s_a505bb30b45c86::t_2109e1343bbd04 18-19
+public/404.html
+  s_a505bb30b45c86::t_6575b1ce14f8f1 7
+public/about.html
+  s_a505bb30b45c86::t_febd51ebe73196 11
+public/index.html
+  s_a505bb30b45c86::t_530b66528bfc43 11
+public/links.html
+  s_a505bb30b45c86::t_d88b5589926c2d 8
+public/posts/ag-ui-live-share-2025.html
+  s_a505bb30b45c86::t_f12cef74429138 8
+public/posts/bs9tzt.html
+  s_a505bb30b45c86::t_6ff42e881f41e1 8
+public/posts/deepseek-v4-flash-harness.html
+  s_a505bb30b45c86::t_7b7b751333e990 8
+public/posts/dpbum7.html
+  s_a505bb30b45c86::t_37b1335103c529 8
+public/posts/dsh-superagent-pi-durable.html
+  s_a505bb30b45c86::t_eb74891099de6d 8
+public/posts/erq3gp.html
+  s_a505bb30b45c86::t_18a342ae054865 8
+public/posts/glh83gd3fsd6rw78.html
+  s_a505bb30b45c86::t_24004182d12da7 8
+public/posts/google-io-connect-shanghai-2025.html
+  s_a505bb30b45c86::t_1d7bf63af8355e 8
+public/posts/hga8n6.html
+  s_a505bb30b45c86::t_9285f419ea340e 8
+public/posts/kr0rc3.html
+  s_a505bb30b45c86::t_0743338f5b8e28 8
+public/posts/lbtio5z9p8gssn26.html
+  s_a505bb30b45c86::t_30ecae28fec50f 8
+public/posts/mcp-yuyan-2025.html
+  s_a505bb30b45c86::t_7e94e4f6d17199 8
+public/posts/meta-harness-agent-self-composition.html
+  s_a505bb30b45c86::t_791f1e636898ac 8
+public/posts/mid-system-vs-system-reminder.html
+  s_a505bb30b45c86::t_d9d364d50de1bc 8
+public/posts/personal-agent-foretold.html
+  s_a505bb30b45c86::t_789c5a239b0889 22
+public/posts/qqi7hq.html
+  s_a505bb30b45c86::t_03cf3aecf3dfe3 8
+public/posts/tokenmaxxing-steam-engine.html
+  s_a505bb30b45c86::t_cec3ba373a6bfe 8
+public/posts/waic-2025.html
+  s_a505bb30b45c86::t_b91db8c1a96cc4 8
+public/posts/za1pom.html
+  s_a505bb30b45c86::t_61d7c4c300db81 8
+public/styles.css
+  s_a505bb30b45c86::t_afefd1b17ff05b 776-789
+scripts/import-yuque.mjs
+  s_a505bb30b45c86::t_322cae757fe9be 472,573,620,656
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "14c602f0f5e3245d4d78aaf1e79ff2d0b7c8f89a",
+  "prompts": {},
+  "sessions": {
+    "s_a505bb30b45c86": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1be80-4b30-7803-a95f-d3ca043bc8d4",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "raohai <surgesoft@gmail.com>"
+    }
+  }
+}
