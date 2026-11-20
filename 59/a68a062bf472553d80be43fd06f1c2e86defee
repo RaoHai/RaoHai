@@ -1,0 +1,26 @@
+public/index.html
+  s_948baea7d88626::t_c9fa3fc0c39668 34-37
+  s_948baea7d88626::t_d966e087be73c8 33
+public/posts/can-taste-scale.html
+  s_948baea7d88626::t_c9fa3fc0c39668 1-135
+content/can-taste-scale.md
+  s_948baea7d88626::t_974d70ab1925fe 1-125
+scripts/import-yuque.mjs
+  s_948baea7d88626::t_c661a8b323e669 14-20
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "59a68a062bf472553d80be43fd06f1c2e86defee",
+  "prompts": {},
+  "sessions": {
+    "s_948baea7d88626": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1f1f3-adbe-7411-b4e0-c2b8178eb10f",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "raohai <surgesoft@gmail.com>"
+    }
+  }
+}
