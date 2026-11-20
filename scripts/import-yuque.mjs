@@ -14,7 +14,7 @@ const posts = [
   {
     slug: "can-taste-scale-en",
     title: "Can Taste Scale?",
-    indexTitle: "Can Taste Scale? · English",
+    hideFromIndex: true,
     created_at: "2026-11-19T04:04:30.000Z",
     fallback: "Actions can be copied. Taste is harder to replicate. Whether taste can scale ultimately depends on how we treat the people who have it.",
     manualFile: "content/can-taste-scale-en.md",
@@ -575,11 +575,12 @@ function siteNav(active = "blog") {
 
 function indexPage(items) {
   const list = [...items]
+    .filter(({ post }) => !post.hideFromIndex)
     .sort((a, b) => timestampFor(b.doc, b.post) - timestampFor(a.doc, a.post))
     .map(
       ({ post, doc }) => `<article>
             <time>${escapeHtml(metaFor(doc, post))}</time>
-            <h3><a href="./posts/${post.slug}.html">${escapeHtml(post.indexTitle || doc?.title || post.title)}</a></h3>
+            <h3><a href="./posts/${post.slug}.html">${escapeHtml(post.indexTitle || doc?.title || post.title)}</a>${post.translationLanguage === "en" ? `<small style="margin-left:.75em;font-weight:400"><a href="./posts/${post.translationSlug}.html" lang="en" hreflang="en">English</a></small>` : ""}</h3>
             ${summaryFor(doc, post) ? `<p>${escapeHtml(summaryFor(doc, post))}</p>` : ""}
           </article>`,
     )
