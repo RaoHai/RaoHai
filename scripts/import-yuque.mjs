@@ -12,6 +12,13 @@ const bookId = 485843;
 
 const posts = [
   {
+    slug: "can-taste-scale",
+    title: "Can Taste Scale?",
+    created_at: "2026-11-19T04:04:30.000Z",
+    fallback: "动作可以复制，判断如何扩散？从默会知识、验收瓶颈和工具约束，讨论超级个体的 taste 如何传递，以及组织需要承担的代价。",
+    manualFile: "content/can-taste-scale.md",
+  },
+  {
     slug: "personal-agent-foretold",
     title: "一桩事先张扬的委托：Personal Agent 背后的需求、资本与能力沉淀",
     created_at: "2026-11-09T00:00:00+08:00",
