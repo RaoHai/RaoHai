@@ -12,11 +12,24 @@ const bookId = 485843;
 
 const posts = [
   {
+    slug: "can-taste-scale-en",
+    title: "Can Taste Scale?",
+    indexTitle: "Can Taste Scale? · English",
+    created_at: "2026-11-19T04:04:30.000Z",
+    fallback: "Actions can be copied. Taste is harder to replicate. Whether taste can scale ultimately depends on how we treat the people who have it.",
+    manualFile: "content/can-taste-scale-en.md",
+    language: "en",
+    translationSlug: "can-taste-scale",
+    translationLanguage: "zh-CN",
+  },
+  {
     slug: "can-taste-scale",
     title: "Can Taste Scale?",
     created_at: "2026-11-19T04:04:30.000Z",
-    fallback: "动作可以复制，判断如何扩散？从默会知识、验收瓶颈和工具约束，讨论超级个体的 taste 如何传递，以及组织需要承担的代价。",
+    fallback: "动作可以复制，taste 很难。Taste 能不能 scale，最终取决于我们怎么对待拥有 taste 的人。",
     manualFile: "content/can-taste-scale.md",
+    translationSlug: "can-taste-scale-en",
+    translationLanguage: "en",
   },
   {
     slug: "personal-agent-foretold",
@@ -420,7 +433,7 @@ function socialMetadata({ title, description, slug, body, language }) {
     `<meta property="og:url" content="${escapeHtml(canonical)}" />`,
     `<meta property="og:title" content="${escapeHtml(title)}" />`,
     `<meta property="og:description" content="${escapeHtml(description || title)}" />`,
-    `<meta property="og:locale" content="${language === "zh-Hant" ? "zh_TW" : "zh_CN"}" />`,
+    `<meta property="og:locale" content="${language === "en" ? "en_US" : language === "zh-Hant" ? "zh_TW" : "zh_CN"}" />`,
     `<meta name="twitter:card" content="${image ? "summary_large_image" : "summary"}" />`,
     `<meta name="twitter:title" content="${escapeHtml(title)}" />`,
     `<meta name="twitter:description" content="${escapeHtml(description || title)}" />`,
@@ -434,11 +447,14 @@ function socialMetadata({ title, description, slug, body, language }) {
   return tags.join("\n    ");
 }
 
-function layout({ title, description, date, body, slug, language = "zh-CN" }) {
+function layout({ title, description, date, body, slug, language = "zh-CN", translationSlug, translationLanguage }) {
+  const isEnglish = language === "en";
+  const languageLink = translationSlug ? `<nav aria-label="${isEnglish ? "Language" : "语言"}"><a href="./${translationSlug}" lang="${translationLanguage}" hreflang="${translationLanguage}">${isEnglish ? "中文" : "English"}</a></nav>` : "";
+  const alternateTags = translationSlug ? `<link rel="alternate" hreflang="${language}" href="https://viberules.dev/posts/${slug}" />\n    <link rel="alternate" hreflang="${translationLanguage}" href="https://viberules.dev/posts/${translationSlug}" />` : "";
   const isTraditional = language === "zh-Hant";
   const article = withArticleToc(body, {
-    directoryLabel: isTraditional ? "目錄" : "目录",
-    ariaLabel: isTraditional ? "章節目錄" : "章节目录",
+    directoryLabel: isEnglish ? "Contents" : isTraditional ? "目錄" : "目录",
+    ariaLabel: isEnglish ? "Article contents" : isTraditional ? "章節目錄" : "章节目录",
   });
   const tocScript = article.toc
     ? `<script>
@@ -475,18 +491,20 @@ function layout({ title, description, date, body, slug, language = "zh-CN" }) {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="${escapeHtml(description || title)}" />
     ${socialMetadata({ title, description, slug, body, language })}
+    ${alternateTags}
     <title>${escapeHtml(title)} · 生活倒影</title>
     <link rel="stylesheet" href="../styles.css?v=20261111-desktop-fonts" />
   </head>
   <body>
     <main class="article-shell">
-      <a class="back-link" href="../index.html">← ${isTraditional ? "首頁" : "首页"}</a>
+      <a class="back-link" href="../index.html">← ${isEnglish ? "Home" : isTraditional ? "首頁" : "首页"}</a>
       <div class="article-layout">
         ${article.toc}
         <article class="article-page">
           <header class="article-header">
             <h1>${escapeHtml(title)}</h1>
             ${date ? `<time datetime="${escapeHtml(date)}">${escapeHtml(date)}</time>` : ""}
+            ${languageLink}
           </header>
           <div class="article-content">
             ${article.body}
@@ -561,7 +579,7 @@ function indexPage(items) {
     .map(
       ({ post, doc }) => `<article>
             <time>${escapeHtml(metaFor(doc, post))}</time>
-            <h3><a href="./posts/${post.slug}.html">${escapeHtml(doc?.title || post.title)}</a></h3>
+            <h3><a href="./posts/${post.slug}.html">${escapeHtml(post.indexTitle || doc?.title || post.title)}</a></h3>
             ${summaryFor(doc, post) ? `<p>${escapeHtml(summaryFor(doc, post))}</p>` : ""}
           </article>`,
     )
@@ -770,6 +788,8 @@ for (const post of posts) {
       body,
       slug: post.slug,
       language: post.language || "zh-CN",
+      translationSlug: post.translationSlug,
+      translationLanguage: post.translationLanguage,
     }),
     "utf8",
   );
